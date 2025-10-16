@@ -1,0 +1,82 @@
+.hero-section {
+    position: relative;
+    height: 80vh;
+    background: url('/assets/images/paris2024.jpg') center/cover no-repeat;
+}
+
+.hero-section .overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.45);
+}
+
+.hero-section .content {
+    position: relative;
+    z-index: 2;
+}
+
+.hero-section h1 {
+    font-size: 3rem;
+}
+
+@media (max-width: 768px) {
+    .hero-section {
+        height: 60vh;
+    }
+
+    .hero-section h1 {
+        font-size: 2rem;
+    }
+
+    .hero-section p {
+        font-size: 1rem;
+    }
+}
+
+.card-img-top {
+    height: 200px;
+    object-fit: cover;
+}
+
+footer {
+    font-size: 0.9rem;
+}
+
+.hero-section {
+    position: relative;
+    height: 80vh;
+    /* Hauteur de la section, ajustable */
+    background-image: url('/assets/images/cyclisme.jpg');
+    /* Chemin vers l'image */
+    background-size: cover;
+    /* L'image couvre toute la div */
+    background-position: center;
+    /* Centrage de l'image */
+    background-repeat: no-repeat;
+    /* Pas de répétition */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+}
+
+.hero-section .overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    /* semi-transparent noir pour contraste */
+    z-index: 1;
+}
+
+.hero-section .content {
+    position: relative;
+    z-index: 2;
+    /* Le contenu passe au-dessus de l'overlay */
+    text-align: center;
+}

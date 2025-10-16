@@ -1,0 +1,35 @@
+<div class="container my-5">
+    <h2 class="text-center mb-4 text-primary fw-bold">
+        🎟️ Nos offres pour les Jeux Olympiques 2024
+    </h2>
+
+    <!-- Si en cours de chargement -->
+    <div *ngIf="loading" class="text-center py-5">
+        <div class="spinner-border text-primary" role="status"></div>
+        <p class="mt-3">Chargement des offres...</p>
+    </div>
+
+    <!-- Si erreur -->
+    <div *ngIf="error" class="alert alert-danger text-center">
+        {{ error }}
+    </div>
+
+    <!-- Liste des offres -->
+    <div class="row" *ngIf="!loading && !error">
+        <div class="col-md-4 mb-4" *ngFor="let offre of offres">
+            <div class="card shadow-sm h-100 text-center border-0">
+                <div class="card-body">
+                    <h5 class="card-title text-primary fw-bold">{{ offre.nomOffre }}</h5>
+                    <p class="card-text text-muted">{{ offre.description }}</p>
+                    <p class="card-text">
+                        <strong>Nombre de personnes :</strong> {{ offre.nbPersonnes }}
+                    </p>
+                    <p class="card-text">
+                        <strong>Prix :</strong> {{ offre.prix | currency:'EUR' }}
+                    </p>
+                    <button class="btn btn-primary mt-2">Ajouter au panier</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

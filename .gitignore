@@ -38,6 +38,11 @@ testem.log
 /typings
 __screenshots__/
 
+# ===================================
+# Dossier personnel à ignorer
+# ===================================
+Aide/
+
 # System files
 .DS_Store
 Thumbs.db
