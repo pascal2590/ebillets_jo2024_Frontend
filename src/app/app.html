@@ -1,6 +1,7 @@
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
   <div class="container-fluid">
     <a class="navbar-brand ms-3" routerLink="/">JO 2024</a>
+
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
       aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
@@ -8,6 +9,7 @@
 
     <div class="collapse navbar-collapse" id="navbarNav">
       <ul class="navbar-nav ms-auto me-3">
+
         <li class="nav-item">
           <a class="nav-link" routerLink="/" routerLinkActive="active"
             [routerLinkActiveOptions]="{ exact: true }">Accueil</a>
@@ -15,9 +17,26 @@
         <li class="nav-item">
           <a class="nav-link" routerLink="/offres" routerLinkActive="active">Offres</a>
         </li>
-        <li class="nav-item">
-          <a class="nav-link" routerLink="/login" routerLinkActive="active">Connexion</a>
-        </li>
+        
+        <!-- ✅ Si utilisateur connecté -->
+        <ng-container *ngIf="user; else notConnected">          
+          <li class="nav-item">
+            <span class="navbar-text text-white me-2">
+              Bonjour {{ user.prenom }}
+            </span>
+            <button class="btn btn-outline-light" (click)="logout()">Déconnexion</button>
+          </li>
+        </ng-container>        
+
+        <!-- ❌ Si non connecté -->
+        <ng-template #notConnected>
+          <li class="nav-item">
+            <a class="nav-link" routerLink="/connexion" routerLinkActive="active">Connexion</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" routerLink="/inscription" routerLinkActive="active">Inscription</a>
+          </li>
+        </ng-template>
       </ul>
     </div>
   </div>
