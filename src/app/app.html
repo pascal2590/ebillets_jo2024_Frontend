@@ -8,27 +8,31 @@
     </button>
 
     <div class="collapse navbar-collapse" id="navbarNav">
-      <ul class="navbar-nav ms-auto me-3">
+      <ul class="navbar-nav ms-auto me-3 align-items-center">
 
         <li class="nav-item">
-          <a class="nav-link" routerLink="/" routerLinkActive="active"
-            [routerLinkActiveOptions]="{ exact: true }">Accueil</a>
+          <a class="nav-link" routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Accueil</a>
         </li>
         <li class="nav-item">
           <a class="nav-link" routerLink="/offres" routerLinkActive="active">Offres</a>
         </li>
-        
-        <!-- ✅ Si utilisateur connecté -->
-        <ng-container *ngIf="user; else notConnected">          
-          <li class="nav-item">
-            <span class="navbar-text text-white me-2">
-              Bonjour {{ user.prenom }}
-            </span>
-            <button class="btn btn-outline-light" (click)="logout()">Déconnexion</button>
-          </li>
-        </ng-container>        
 
-        <!-- ❌ Si non connecté -->
+        <!-- Utilisateur connecté -->
+        <ng-container *ngIf="user; else notConnected">
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle text-white" href="#" role="button" data-bs-toggle="dropdown"
+               aria-expanded="false">
+              Bonjour {{ user.prenom }}
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end">
+              <li>
+                <button class="dropdown-item" (click)="logout()">Déconnexion</button>
+              </li>
+            </ul>
+          </li>
+        </ng-container>
+
+        <!-- Non connecté -->
         <ng-template #notConnected>
           <li class="nav-item">
             <a class="nav-link" routerLink="/connexion" routerLinkActive="active">Connexion</a>
@@ -37,6 +41,7 @@
             <a class="nav-link" routerLink="/inscription" routerLinkActive="active">Inscription</a>
           </li>
         </ng-template>
+
       </ul>
     </div>
   </div>

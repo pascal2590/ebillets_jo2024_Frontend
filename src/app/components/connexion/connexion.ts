@@ -1,13 +1,14 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
-import { Router } from '@angular/router';
+import { HttpClient } from '@angular/common/http';
+import { Router, RouterLink } from '@angular/router';
+import { AuthService } from '../../services/auth.service'; // ← ton service AuthService
 
 @Component({
   selector: 'app-connexion',
   standalone: true,
-  imports: [CommonModule, FormsModule, HttpClientModule],
+  imports: [CommonModule, FormsModule, RouterLink],
   templateUrl: './connexion.html',
   styleUrls: ['./connexion.css']
 })
@@ -18,7 +19,7 @@ export class Connexion {
   error: string | null = null;
   loading = false;
 
-  constructor(private http: HttpClient, private router: Router) { }
+  constructor(private http: HttpClient, private router: Router, private authService: AuthService) { }
 
   onSubmit(): void {
     this.error = null;
@@ -33,21 +34,18 @@ export class Connexion {
         this.loading = false;
         this.message = "Connexion réussie ✅";
 
-        // ✅ Sauvegarde du token (s'il est renvoyé par ton API)
+        // 🔹 Sauvegarde du token si nécessaire
         if (res.token) {
           localStorage.setItem('token', res.token);
         }
 
-        // ✅ Sauvegarde du user (optionnel)
+        // 🔹 Sauvegarde et notification via AuthService
         if (res.utilisateur) {
-          localStorage.setItem('user', JSON.stringify(res.utilisateur));
+          this.authService.login(res.utilisateur);
         }
 
-        // ✅ Redirection vers l'accueil + recharge du menu
-        setTimeout(() => {
-          this.router.navigate(['/']);
-          window.location.reload(); // force la mise à jour du menu
-        }, 1000);
+        // 🔹 Redirection vers l'accueil (SPA fluide)
+        this.router.navigate(['/']);
       },
       error: err => {
         this.loading = false;

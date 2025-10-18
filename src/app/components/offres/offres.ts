@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule, CurrencyPipe } from '@angular/common';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-offres',
   standalone: true,
-  imports: [CommonModule, HttpClientModule, CurrencyPipe],
+  imports: [CommonModule, CurrencyPipe],
   templateUrl: './offres.html',
   styleUrls: ['./offres.css']
 })

@@ -1,4 +1,4 @@
-import { Routes } from '@angular/router';
+import { RouterModule, Routes } from '@angular/router';
 import { Accueil } from './components/accueil/accueil';
 import { Offres } from './components/offres/offres';
 import { Connexion } from './components/connexion/connexion';
@@ -11,4 +11,3 @@ export const routes: Routes = [
     { path: 'inscription', component: Inscription },
     { path: '**', redirectTo: '' }
 ];
-

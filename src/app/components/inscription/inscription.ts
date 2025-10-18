@@ -1,13 +1,13 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-inscription',
   standalone: true,
-  imports: [CommonModule, FormsModule, HttpClientModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './inscription.html',
   styleUrls: ['./inscription.css']
 })
@@ -44,10 +44,10 @@ export class Inscription {
         this.message = res.message;
         this.loading = false;
 
-        // Redirection après quelques secondes
+        // Redirection après 1 seconde
         setTimeout(() => {
           this.router.navigate(['/connexion']);
-        }, 2000);
+        }, 1000);
       },
       error: err => {
         this.error = err.error || "Une erreur est survenue lors de l'inscription.";

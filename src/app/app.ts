@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { RouterModule, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { AuthService } from './services/auth.service';
 
 @Component({
   selector: 'app-root',
@@ -12,20 +13,17 @@ import { CommonModule } from '@angular/common';
 export class App {
   user: any = null;
 
-  constructor(private router: Router) { }
+  constructor(private router: Router, private authService: AuthService) { }
 
   ngOnInit() {
-    this.checkUser();
-  }
-
-  checkUser() {
-    const storedUser = localStorage.getItem('user');
-    this.user = storedUser ? JSON.parse(storedUser) : null;
+    // S'abonner aux changements du user
+    this.authService.user$.subscribe(user => {
+      this.user = user;
+    });
   }
 
   logout() {
-    localStorage.removeItem('user');
-    this.user = null;
-    this.router.navigate(['/connexion']);
+    this.authService.logout();
+    this.router.navigate(['/accueil']);
   }
 }

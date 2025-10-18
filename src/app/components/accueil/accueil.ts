@@ -1,15 +1,16 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';  // <-- à ajouter
+import { Router, RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-accueil',
   standalone: true,
-  imports: [CommonModule, RouterModule],       // <-- ajouter RouterModule pour que le clic sur le bouton fonctionne
+  imports: [CommonModule, RouterModule],
   templateUrl: './accueil.html',
   styleUrls: ['./accueil.css']
 })
-export class Accueil {
+export class Accueil implements OnInit {
+
   epreuves = [
     {
       nom: 'Athlétisme',
@@ -27,4 +28,23 @@ export class Accueil {
       image: 'assets/images/cyclisme.jpg'
     }
   ];
+
+  user: any = null;
+
+  constructor(private router: Router) { }
+
+  ngOnInit(): void {
+    // Charger l'utilisateur depuis localStorage à l'initialisation
+    const storedUser = localStorage.getItem('user');
+    this.user = storedUser ? JSON.parse(storedUser) : null;
+  }
+
+  logout() {
+    // Supprimer l'utilisateur et mettre à jour la vue
+    localStorage.removeItem('user');
+    this.user = null;
+
+    // Redirection vers l'accueil
+    this.router.navigate(['/']);
+  }
 }
