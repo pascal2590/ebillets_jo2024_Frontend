@@ -49,7 +49,7 @@ footer {
     position: relative;
     height: 80vh;
     /* Hauteur de la section, ajustable */
-    background-image: url('/assets/images/cyclisme.jpg');
+    background-image: url('/assets/images/image_01.jpg');
     /* Chemin vers l'image */
     background-size: cover;
     /* L'image couvre toute la div */
@@ -80,3 +80,58 @@ footer {
     /* Le contenu passe au-dessus de l'overlay */
     text-align: center;
 }
+
+.card {
+    position: relative;
+    /* nécessaire pour z-index */
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border-radius: 15px;  /* bords arrondis */
+    /* overflow: hidden; -> on retire overflow pour que l'image dépasse */
+}
+
+.card-img-top {
+    border-radius: 15px;
+    /* arrondi de l'image */
+    transition: transform 0.4s ease, box-shadow 0.3s ease;
+}
+
+/* Zoom de l'image au survol */
+.card:hover .card-img-top {
+    transform: scale(2);  /* ou 1.5 si trop grand */
+    z-index: 20; /* met l'image au-dessus des autres cartes */
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4);
+}
+
+/* Effet de pop sur la carte entière */
+.card:hover {
+    transform: scale(1.05);
+    z-index: 10;
+    /* carte elle-même au-dessus */
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+}
+
+.custom-footer {
+    background: linear-gradient(90deg, #0055A4 0%, #FFFFFF 50%, #EF4135 100%);
+    color: #000;
+    /* texte noir */
+    font-weight: 500;
+    box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.15);
+    position: relative;
+}
+
+/* Petits ajustements esthétiques */
+.custom-footer p {
+    margin: 0;
+    font-size: 0.75rem;
+}
+
+.custom-footer a {
+    color: #000;
+    text-decoration: none;
+}
+
+.custom-footer a:hover {
+    text-decoration: underline;
+    color: #333;
+}
+

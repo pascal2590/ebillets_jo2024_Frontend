@@ -27,7 +27,10 @@
                     <p class="card-text">
                         <strong>Prix :</strong> {{ offre.prix | currency:'EUR' }}
                     </p>
-                    <button class="btn btn-primary mt-2">Ajouter au panier</button>
+                    <!-- <button class="btn btn-primary mt-2">Ajouter au panier</button> -->
+                    <button class="btn btn-primary mt-2" (click)="ajouterAuPanier(offre)">
+                        Ajouter au panier
+                    </button>
                 </div>
             </div>
         </div>

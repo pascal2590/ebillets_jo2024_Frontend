@@ -1,4 +1,4 @@
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+<nav class="navbar navbar-expand-lg navbar-dark custom-navbar">
   <div class="container-fluid">
     <a class="navbar-brand ms-3" routerLink="/">JO 2024</a>
 
@@ -10,8 +10,11 @@
     <div class="collapse navbar-collapse" id="navbarNav">
       <ul class="navbar-nav ms-auto me-3 align-items-center">
 
+        <!-- Liens communs -->
         <li class="nav-item">
-          <a class="nav-link" routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Accueil</a>
+          <a class="nav-link" routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+            Accueil
+          </a>
         </li>
         <li class="nav-item">
           <a class="nav-link" routerLink="/offres" routerLinkActive="active">Offres</a>
@@ -19,9 +22,17 @@
 
         <!-- Utilisateur connecté -->
         <ng-container *ngIf="user; else notConnected">
+
+          <!-- ✅ Lien Panier visible uniquement si connecté -->
+          <li class="nav-item">
+            <a class="nav-link" routerLink="/panier" routerLinkActive="active">
+              🛒 Panier
+            </a>
+          </li>
+
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle text-white" href="#" role="button" data-bs-toggle="dropdown"
-               aria-expanded="false">
+              aria-expanded="false">
               Bonjour {{ user.prenom }}
             </a>
             <ul class="dropdown-menu dropdown-menu-end">

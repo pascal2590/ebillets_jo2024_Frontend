@@ -1,0 +1,66 @@
+.custom-navbar {
+    background: linear-gradient(90deg, #0055A4 0%, #FFFFFF 50%, #EF4135 100%);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    position: relative;
+    z-index: 1000;
+}
+
+/* ✅ Texte en noir */
+.navbar .navbar-brand,
+.navbar .nav-link,
+.navbar .dropdown-toggle {
+    color: #000 !important;
+    font-weight: 500;
+}
+
+/* Survol des liens */
+.navbar .nav-link:hover,
+.navbar .dropdown-item:hover {
+    color: #333 !important;
+    text-decoration: underline;
+}
+
+/* ✅ Bordure dorée animée */
+.custom-navbar::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 5px;
+    background: linear-gradient(90deg,
+            #b8860b,
+            #ffd700,
+            #fff3b0,
+            #ffd700,
+            #b8860b);
+    background-size: 300% 100%;
+    animation: goldShine 3s linear infinite;
+    border-bottom-left-radius: 4px;
+    border-bottom-right-radius: 4px;
+    filter: brightness(1.2);
+}
+
+/* 🌟 Animation douce du reflet doré */
+@keyframes goldShine {
+    0% {
+        background-position: 0% 50%;
+    }
+
+    50% {
+        background-position: 100% 50%;
+    }
+
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+/* Appliquer le dégradé à toute la page */
+:host {
+    display: block;
+    min-height: 100vh;
+    /* prend toute la hauteur de la page */
+    background: linear-gradient(90deg, #0055A4 0%, #FFFFFF 50%, #EF4135 100%);
+    color: #000;
+}

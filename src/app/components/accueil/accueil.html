@@ -9,7 +9,7 @@
     </div>
 </div>
 
-<section class="container my-5">
+<section class="section-degrade container my-5">
     <h2 class="text-center mb-4">Quelques épreuves phares</h2>
     <div class="row">
         <div class="col-md-4 mb-4" *ngFor="let epreuve of epreuves">
@@ -18,7 +18,7 @@
                 <div class="card-body text-center">
                     <h5 class="card-title">{{ epreuve.nom }}</h5>
                     <p class="card-text text-muted">
-                        Découvrez les athlètes et les compétitions de l’épreuve {{ epreuve.nom }}.
+                        Venez soutenir les athlètes de cette épreuve <span class="fw-bold">{{ epreuve.nom }}</span>.
                     </p>
                 </div>
             </div>
@@ -26,8 +26,8 @@
     </div>
 </section>
 
-<footer class="bg-dark text-white text-center py-4 mt-5">
+<footer class="custom-footer text-black text-center py-4 mt-5">
     <p class="mb-0">
-        © 2024 Jeux Olympiques de Paris — Tous droits réservés | Projet eBillets JO2024
+        © 2024 Jeux Olympiques de Paris — Tous droits réservés | Projet STUDI eBillets JO2024 réalisé par Pascal MOREL
     </p>
 </footer>

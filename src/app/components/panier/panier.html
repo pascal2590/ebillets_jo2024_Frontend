@@ -1,0 +1,34 @@
+<div class="container py-4">
+    <h2 class="text-center mb-4">🛒 Mon Panier</h2>
+
+    <div *ngIf="panier.length === 0" class="alert alert-info text-center">
+        Votre panier est vide.
+    </div>
+
+    <table *ngIf="panier.length > 0" class="table table-striped shadow">
+        <thead class="table-dark">
+            <tr>
+                <th>Offre</th>
+                <th>Prix</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let offre of panier">
+                <td>{{ offre.nomOffre }}</td>
+                <td>{{ offre.prix | currency:'EUR' }}</td>
+                <td>
+                    <button class="btn btn-danger btn-sm" (click)="supprimer(offre.id)">
+                        Supprimer
+                    </button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div *ngIf="panier.length > 0" class="text-end">
+        <button class="btn btn-outline-danger me-2" (click)="vider()">Vider le panier</button>
+        <button class="btn btn-success" routerLink="/paiement">Passer la commande</button>
+    </div>
+</div>
+
