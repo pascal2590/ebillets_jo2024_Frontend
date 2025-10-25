@@ -1,0 +1,12 @@
+h2 {
+    font-weight: bold;
+}
+
+.table {
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+button {
+    min-width: 160px;
+}

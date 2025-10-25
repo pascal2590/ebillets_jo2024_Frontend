@@ -49,7 +49,7 @@ footer {
     position: relative;
     height: 80vh;
     /* Hauteur de la section, ajustable */
-    background-image: url('/assets/images/image_01.jpg');
+    background-image: url('/assets/images/image_05.jpg');
     /* Chemin vers l'image */
     background-size: cover;
     /* L'image couvre toute la div */
@@ -111,7 +111,8 @@ footer {
 }
 
 .custom-footer {
-    background: linear-gradient(90deg, #0055A4 0%, #FFFFFF 50%, #EF4135 100%);
+    /*background: linear-gradient(90deg, #0055A4 0%, #FFFFFF 50%, #EF4135 100%); */
+    background-color: #bebdca;
     color: #000;
     /* texte noir */
     font-weight: 500;
@@ -122,7 +123,7 @@ footer {
 /* Petits ajustements esthétiques */
 .custom-footer p {
     margin: 0;
-    font-size: 0.75rem;
+    font-size: 0.80rem;
 }
 
 .custom-footer a {

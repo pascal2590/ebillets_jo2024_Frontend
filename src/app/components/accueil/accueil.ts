@@ -34,13 +34,13 @@ export class Accueil implements OnInit {
   constructor(private router: Router) { }
 
   ngOnInit(): void {
-    // Charger l'utilisateur depuis localStorage à l'initialisation
+    // Charge l'utilisateur depuis localStorage à l'initialisation
     const storedUser = localStorage.getItem('user');
     this.user = storedUser ? JSON.parse(storedUser) : null;
   }
 
   logout() {
-    // Supprimer l'utilisateur et mettre à jour la vue
+    // Supprime l'utilisateur et met à jour la vue
     localStorage.removeItem('user');
     this.user = null;
 

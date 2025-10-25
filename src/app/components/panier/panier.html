@@ -18,7 +18,7 @@
                 <td>{{ offre.nomOffre }}</td>
                 <td>{{ offre.prix | currency:'EUR' }}</td>
                 <td>
-                    <button class="btn btn-danger btn-sm" (click)="supprimer(offre.id)">
+                    <button class="btn btn-danger btn-sm" (click)="supprimer(offre.idOffre)">
                         Supprimer
                     </button>
                 </td>
@@ -28,7 +28,6 @@
 
     <div *ngIf="panier.length > 0" class="text-end">
         <button class="btn btn-outline-danger me-2" (click)="vider()">Vider le panier</button>
-        <button class="btn btn-success" routerLink="/paiement">Passer la commande</button>
+        <button class="btn btn-success" (click)="ouvrirReservation()">Réserver</button>
     </div>
 </div>
-

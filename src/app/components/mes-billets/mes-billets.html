@@ -1,0 +1,34 @@
+<div class="container mt-4">
+    <h2 class="text-center mb-4">🎟️ Mes billets</h2>
+
+    <div *ngIf="loading" class="alert alert-info text-center">
+        Chargement de vos billets...
+    </div>
+
+    <div *ngIf="error" class="alert alert-danger text-center">
+        {{ error }}
+    </div>
+
+    <div *ngIf="!loading && !error && billets.length === 0" class="alert alert-secondary text-center">
+        Aucun billet trouvé pour le moment.
+    </div>
+
+    <div class="row" *ngIf="billets.length > 0">
+        <div *ngFor="let billet of billets" class="col-md-4 mb-3">
+            <div class="card shadow-sm h-100">
+                <div class="card-body">
+                    <h5 class="card-title text-primary">
+                        {{ billet.offre?.nomOffre || 'Offre inconnue' }}
+                    </h5>
+                    <p><strong>Date d’émission :</strong> {{ billet.dateEmission | date:'short' }}</p>
+                    <p><strong>Statut :</strong> {{ billet.statut }}</p>
+                    <p><strong>Clé finale :</strong> {{ billet.cleFinale | slice:0:20 }}...</p>
+                    <div class="text-center mt-3">
+                        <img [src]="'https://api.qrserver.com/v1/create-qr-code/?data=' + billet.qrCode + '&size=150x150'"
+                            alt="QR Code" class="img-fluid rounded border" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

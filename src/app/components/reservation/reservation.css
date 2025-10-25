@@ -1,0 +1,14 @@
+.ticket-card {
+    border: 2px dashed #ccc;
+    border-radius: 10px;
+    transition: transform 0.2s;
+}
+
+.ticket-card:hover {
+    transform: scale(1.02);
+}
+
+.qrcode img {
+    width: 150px;
+    height: 150px;
+}

@@ -17,7 +17,8 @@ export class PanierService {
     /** Ajoute une offre au panier */
     ajouter(offre: any): void {
         const panier = this.getPanier();
-        const existant = panier.find(o => o.id === offre.id);
+        // ✅ Correction : utiliser idOffre au lieu de id
+        const existant = panier.find(o => o.idOffre === offre.idOffre);
 
         if (!existant) {
             panier.push(offre);
@@ -26,8 +27,9 @@ export class PanierService {
     }
 
     /** Supprime une offre du panier */
-    supprimer(id: number): void {
-        const panier = this.getPanier().filter(o => o.id !== id);
+    supprimer(idOffre: number): void {
+        // ✅ Correction ici aussi
+        const panier = this.getPanier().filter(o => o.idOffre !== idOffre);
         localStorage.setItem(this.panierKey, JSON.stringify(panier));
     }
 

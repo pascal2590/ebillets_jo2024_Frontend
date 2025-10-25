@@ -1,1 +1,31 @@
-<p>paiement works!</p>
+<div class="container py-5">
+    <h2 class="text-center mb-4 text-success">💳 Validation de la commande</h2>
+
+    <div *ngIf="panier.length > 0">
+        <table class="table table-hover shadow-sm">
+            <thead class="table-success">
+                <tr>
+                    <th>Offre</th>
+                    <th>Prix</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let offre of panier">
+                    <td>{{ offre.nomOffre }}</td>
+                    <td>{{ offre.prix | currency:'EUR' }}</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="text-end mt-3">
+            <h4>Total : <span class="text-success">{{ total | currency:'EUR' }}</span></h4>
+        </div>
+
+        <div class="text-end mt-4">
+            <button class="btn btn-outline-secondary me-3" (click)="retourPanier()">Retour au panier</button>
+            <button class="btn btn-success" (click)="passerCommande()" [disabled]="loading">
+                {{ loading ? 'Traitement...' : 'Passer la commande' }}
+            </button>
+        </div>
+    </div>
+</div>

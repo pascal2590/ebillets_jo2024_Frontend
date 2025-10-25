@@ -1,0 +1,53 @@
+<div class="container py-4">
+    <h2 class="text-center mb-4">🎟️ Mes Réservations</h2>
+
+    <div *ngIf="loading" class="text-center my-4">
+        <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Chargement...</span>
+        </div>
+    </div>
+
+    <div *ngIf="!loading && reservations.length === 0" class="alert alert-info text-center">
+        Aucune réservation trouvée.
+    </div>
+
+    <div *ngIf="!loading && reservations.length > 0">
+        <div class="text-end mb-3">
+            <button class="btn btn-outline-secondary" (click)="retourPanier()">⬅️ Retour au panier</button>
+        </div>
+
+        <div *ngFor="let res of reservations" class="card mb-4 shadow-sm">
+            <div class="card-header bg-dark text-white">
+                <strong>Offre :</strong> {{ res.offre.nomOffre }} <br>
+                <strong>Date :</strong> {{ res.offre.dateCreation | date:'dd/MM/yyyy' }}
+            </div>
+
+            <div class="card-body">
+                <p><strong>Clé de réservation :</strong> {{ res.cleReservation }}</p>
+                <p><strong>Statut :</strong>
+                    <span class="badge bg-success" *ngIf="res.statut === 'En attente'">En attente</span>
+                    <span class="badge bg-secondary" *ngIf="res.statut !== 'En attente'">{{ res.statut }}</span>
+                </p>
+
+                <h5 class="mt-3">🎫 Billets associés</h5>
+                <div class="row">
+                    <div *ngFor="let billet of res.billets" class="col-md-4 mb-3">
+                        <div class="card ticket-card shadow-sm">
+                            <div class="card-body text-center">
+                                <div class="qrcode mb-2">
+                                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data={{billet.qrCode}}"
+                                        alt="QR Code">
+                                </div>
+                                <p><strong>Clé finale :</strong><br>{{ billet.cleFinale }}</p>
+                                <p><strong>Statut :</strong> {{ billet.statut }}</p>
+                            </div>
+                            <div class="card-footer text-center small text-muted">
+                                <strong>{{ utilisateur?.prenom }} {{ utilisateur?.nom }}</strong>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
