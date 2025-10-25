@@ -19,7 +19,8 @@
         <div *ngFor="let res of reservations" class="card mb-4 shadow-sm">
             <div class="card-header bg-dark text-white">
                 <strong>Offre :</strong> {{ res.offre.nomOffre }} <br>
-                <strong>Date :</strong> {{ res.offre.dateCreation | date:'dd/MM/yyyy' }}
+                <!-- <strong>Date :</strong> {{ res.offre.dateCreation | date:'dd/MM/yyyy' }} -->
+                <strong>Date :</strong> {{ res.dateReservation | date:'dd/MM/yyyy' }}
             </div>
 
             <div class="card-body">

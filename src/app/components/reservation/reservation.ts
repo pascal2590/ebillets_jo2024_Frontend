@@ -39,6 +39,9 @@ export class Reservation implements OnInit {
         next: (data: any) => {
           this.utilisateur = data.utilisateur;
           this.reservations = data.reservations;
+          this.reservations.forEach(res => {
+            res.dateReservation = new Date(res.dateReservation);
+          });
         },
         error: (err) => {
           console.error('Erreur chargement réservations :', err);
