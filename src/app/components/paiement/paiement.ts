@@ -1,77 +1,71 @@
 import { Component, OnInit } from '@angular/core';
-import { CommonModule, CurrencyPipe } from '@angular/common';
-import { Router } from '@angular/router';
-import { HttpClient } from '@angular/common/http';
-import { ToastService } from '../../services/toast.service';
+import { Router, ActivatedRoute } from '@angular/router';
+import { CommonModule } from '@angular/common';
+import { PaiementService } from '../../services/paiement.service';
 
 @Component({
   selector: 'app-paiement',
   standalone: true,
-  imports: [CommonModule, CurrencyPipe],
+  imports: [CommonModule],
   templateUrl: './paiement.html',
   styleUrls: ['./paiement.css']
 })
 export class Paiement implements OnInit {
-  panier: any[] = [];
-  total = 0;
-  loading = false;
+
+  reservation: any;
+  total: number = 0;
+  idReservation!: number;
+  loading: boolean = false;
 
   constructor(
+    private paiementService: PaiementService,
     private router: Router,
-    private http: HttpClient,
-    private toast: ToastService
+    private route: ActivatedRoute
   ) { }
 
   ngOnInit(): void {
-    const data = localStorage.getItem('panier');
-    this.panier = data ? JSON.parse(data) : [];
-    this.total = this.panier.reduce((sum, offre) => sum + (offre.prix || 0), 0);
+    this.idReservation = Number(this.route.snapshot.paramMap.get('idReservation'));
+    console.log('🆔 ID réservation reçu :', this.idReservation);
 
-    // Protection : si le panier est vide
-    if (this.panier.length === 0) {
-      this.toast.show('Votre panier est vide.', 'info');
-      this.router.navigate(['/offres']);
-    }
-  }
+    if (!this.idReservation) return;
 
-  passerCommande(): void {
-    const userData = localStorage.getItem('user');
-    if (!userData) {
-      this.toast.show('Vous devez être connecté pour passer une commande.', 'error');
-      this.router.navigate(['/connexion']);
-      return;
-    }
-
-    const user = JSON.parse(userData);
-
-    const billets = this.panier.map(offre => ({
-      idOffre: offre.idOffre,
-      idUtilisateur: user.idUtilisateur,
-      dateCommande: new Date(),
-      quantite: 1
-    }));
-
-    this.loading = true;    
-
-    this.http.post('https://localhost:5001/api/Billet', billets).subscribe({
-      next: () => {
-        this.toast.show('🎟️ Commande effectuée avec succès ! Vos billets ont été créés.', 'success');
-        localStorage.removeItem('panier');
-        this.loading = false;
-
-        setTimeout(() => {
-          this.router.navigate(['/']);
-        }, 2000);
+    // 🔹 Charger la réservation depuis l’API
+    this.paiementService.getReservation(this.idReservation).subscribe({
+      next: (res) => {
+        console.log('✅ Réservation chargée :', res);
+        this.reservation = res;
+        this.total = res.offre?.prix ?? 0;
       },
       error: (err) => {
-        console.error(err);
-        this.toast.show("Une erreur est survenue lors de la commande.", 'error');
-        this.loading = false;
+        console.error('❌ Erreur chargement réservation :', err);
       }
     });
   }
 
-  retourPanier(): void {
+  passerCommande() {
+    if (!this.idReservation) {
+      alert('❌ Aucune réservation à payer.');
+      return;
+    }
+
+    this.loading = true;
+
+    this.paiementService.payerReservation(this.idReservation).subscribe({
+      next: (res) => {
+        console.log('✅ Paiement réussi :', res);
+        this.loading = false;
+        alert('✅ Paiement effectué avec succès !');
+        this.router.navigate(['/mes-billets']);
+      },
+      error: (err) => {
+        console.error('❌ Erreur paiement :', err);
+        this.loading = false;
+        alert('❌ Erreur lors du paiement. Veuillez réessayer.');
+      }
+    });
+  }
+
+  retourPanier() {
     this.router.navigate(['/panier']);
   }
 }

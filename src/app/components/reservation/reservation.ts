@@ -34,7 +34,7 @@ export class Reservation implements OnInit {
 
   chargerReservations(idUtilisateur: number): void {
     this.loading = true;
-    this.http.get(`http://localhost:5000/api/Reservation/utilisateur/${idUtilisateur}`)
+    this.http.get(`https://localhost:5001/api/Reservation/utilisateur/${idUtilisateur}`)
       .subscribe({
         next: (data: any) => {
           this.utilisateur = data.utilisateur;
@@ -56,4 +56,23 @@ export class Reservation implements OnInit {
   retourPanier(): void {
     this.router.navigate(['/panier']);
   }
+
+  // ✅ Nouvelle méthode pour aller vers la page de paiement
+  payerReservation(idReservation: number) {
+    if (!idReservation) {
+      alert('❌ Réservation introuvable.');
+      return;
+    }
+
+    console.log('🧭 Redirection vers paiement pour réservation :', idReservation);
+    this.router.navigate(['/paiement', idReservation]);
+  }
+
+  allerPaiement(idReservation: number) {
+    this.router.navigate(['/paiement', idReservation]);
+  }
+
+  
+
+
 }

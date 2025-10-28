@@ -18,12 +18,18 @@
 
         <div *ngFor="let res of reservations" class="card mb-4 shadow-sm">
             <div class="card-header bg-dark text-white">
-                <strong>Offre :</strong> {{ res.offre.nomOffre }} <br>
-                <!-- <strong>Date :</strong> {{ res.offre.dateCreation | date:'dd/MM/yyyy' }} -->
+                <strong>Offre :</strong> {{ res.offre.nomOffre }} <br>                
                 <strong>Date :</strong> {{ res.dateReservation | date:'dd/MM/yyyy' }}
             </div>
 
             <div class="card-body">
+                <!-- ✅ Bouton Paiement -->
+                <div class="text-end mt-3">
+                    <button class="btn btn-success" (click)="payerReservation(res.idReservation)">
+                        💳 Payer maintenant
+                    </button>
+                </div>
+
                 <p><strong>Clé de réservation :</strong> {{ res.cleReservation }}</p>
                 <p><strong>Statut :</strong>
                     <span class="badge bg-success" *ngIf="res.statut === 'En attente'">En attente</span>
@@ -47,7 +53,7 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </div>                
             </div>
         </div>
     </div>

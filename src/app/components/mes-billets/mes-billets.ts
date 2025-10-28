@@ -14,6 +14,7 @@ export class MesBillets implements OnInit {
   billets: any[] = [];
   loading = false;
   error: string | null = null;
+  utilisateur: any = null;  // ✅ Propriété ajoutée pour le template
 
   constructor(private http: HttpClient, private router: Router) { }
 
@@ -24,8 +25,8 @@ export class MesBillets implements OnInit {
       return;
     }
 
-    const user = JSON.parse(userData);
-    this.chargerBillets(user.idUtilisateur);
+    this.utilisateur = JSON.parse(userData); // ✅ initialisation
+    this.chargerBillets(this.utilisateur.idUtilisateur);
   }
 
   chargerBillets(idUtilisateur: number): void {
@@ -36,6 +37,7 @@ export class MesBillets implements OnInit {
           (a, b) => new Date(b.dateEmission).getTime() - new Date(a.dateEmission).getTime()
         );
         this.loading = false;
+        console.log(this.billets); // Vérifie si 'offre' est bien rempli
       },
       error: (err) => {
         console.error(err);
@@ -43,5 +45,10 @@ export class MesBillets implements OnInit {
         this.loading = false;
       }
     });
+  }
+
+  // 🔹 Ajoute cette méthode si tu veux un bouton "Retour au panier"
+  retourPanier(): void {
+    this.router.navigate(['/panier']);
   }
 }

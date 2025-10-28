@@ -1,34 +1,44 @@
-<div class="container mt-4">
-    <h2 class="text-center mb-4">🎟️ Mes billets</h2>
+<div class="container py-4">
+    <h2 class="text-center mb-4">🎟️ Mes Billets</h2>
 
-    <div *ngIf="loading" class="alert alert-info text-center">
-        Chargement de vos billets...
+    <div *ngIf="loading" class="text-center my-4">
+        <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Chargement...</span>
+        </div>
     </div>
 
-    <div *ngIf="error" class="alert alert-danger text-center">
-        {{ error }}
+    <div *ngIf="!loading && billets.length === 0" class="alert alert-info text-center">
+        Aucun billet trouvé.
     </div>
 
-    <div *ngIf="!loading && !error && billets.length === 0" class="alert alert-secondary text-center">
-        Aucun billet trouvé pour le moment.
-    </div>
+    <div *ngIf="!loading && billets.length > 0">
+        <div class="text-end mb-3">
+            <button class="btn btn-outline-secondary" (click)="retourPanier()">⬅️ Retour au panier</button>
+        </div>
 
-    <div class="row" *ngIf="billets.length > 0">
-        <div *ngFor="let billet of billets" class="col-md-4 mb-3">
-            <div class="card shadow-sm h-100">
-                <div class="card-body">
-                    <h5 class="card-title text-primary">
-                        {{ billet.offre?.nomOffre || 'Offre inconnue' }}
-                    </h5>
-                    <p><strong>Date d’émission :</strong> {{ billet.dateEmission | date:'short' }}</p>
-                    <p><strong>Statut :</strong> {{ billet.statut }}</p>
-                    <p><strong>Clé finale :</strong> {{ billet.cleFinale | slice:0:20 }}...</p>
-                    <div class="text-center mt-3">
-                        <img [src]="'https://api.qrserver.com/v1/create-qr-code/?data=' + billet.qrCode + '&size=150x150'"
-                            alt="QR Code" class="img-fluid rounded border" />
-                    </div>
+        <div *ngFor="let billet of billets" class="card mb-4 shadow-sm">
+            <div class="card-header bg-dark text-white">
+                <strong>Offre :</strong> {{ billet.offre?.nomOffre || 'Offre inconnue' }} <br>
+                <strong>Date d’émission :</strong> {{ billet.dateEmission | date:'dd/MM/yyyy' }}
+            </div>
+
+            <div class="card-body">
+                <p><strong>Clé finale :</strong><br>{{ billet.cleFinale }}</p>
+                <p><strong>Statut :</strong>
+                    <span class="badge bg-success" *ngIf="billet.statut === 'Valide'">Valide</span>
+                    <span class="badge bg-secondary" *ngIf="billet.statut !== 'Valide'">{{ billet.statut }}</span>
+                </p>
+
+                <div class="text-center mt-3">
+                    <img [src]="'https://api.qrserver.com/v1/create-qr-code/?data=' + billet.qrCode + '&size=150x150'"
+                        alt="QR Code" class="img-fluid rounded border" />
                 </div>
             </div>
+
+            <div class="card-footer text-center small text-muted">
+                <strong>{{ utilisateur.prenom }} {{ utilisateur.nom }}</strong>
+            </div>
         </div>
+        
     </div>
 </div>

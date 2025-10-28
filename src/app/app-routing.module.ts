@@ -20,7 +20,7 @@ export const routes: Routes = [
 
     // ✅ Routes protégées
     { path: 'panier', component: Panier, canActivate: [authGuard] },
-    { path: 'paiement', component: Paiement, canActivate: [authGuard] },
+    { path: 'paiement/:idReservation', component: Paiement, canActivate: [authGuard] },
     { path: 'mes-billets', component: MesBillets, canActivate: [authGuard] },
     { path: 'reservation', component: Reservation, canActivate: [authGuard] },
 
