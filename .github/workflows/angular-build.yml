@@ -1,4 +1,4 @@
-name: Angular Build
+name: Angular Build (Development)
 
 on:
   push:
@@ -13,23 +13,27 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v3
+      # ✅ Récupérer le dépôt
+      - name: Checkout repository
+        uses: actions/checkout@v3
 
-    - name: Setup Node.js
-      uses: actions/setup-node@v3
-      with:
-        node-version: 20
+      # ✅ Configurer Node.js
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20
 
-    - name: Install dependencies
-      run: npm install
+      # ✅ Installer les dépendances
+      - name: Install dependencies
+        run: npm install
 
-    - name: Build Angular project
-      run: npm run build -- --prod
+      # ✅ Build Angular (mode développement)
+      - name: Build Angular project
+        run: npm run build
 
-    - name: Upload build artifacts
-      uses: actions/upload-artifact@v3
-      with:
-        name: angular-dist
-        path: dist/
-
+      # ✅ Upload des fichiers build (dist/)
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: angular-dist
+          path: dist/
