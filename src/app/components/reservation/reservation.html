@@ -1,63 +1,66 @@
-<div class="container py-4">
-    <h2 class="text-center mb-4 display-6">🎟️ Mes Réservations</h2>
+<div class="container py-5 fade-in">
+    <h2 class="text-center mb-5 fw-bold display-5 text-gradient">
+        Mes Réservations
+    </h2>
 
+    <!-- Chargement -->
     <div *ngIf="loading" class="text-center my-5">
-        <div class="spinner-border text-primary" role="status">
-            <span class="visually-hidden">Chargement...</span>
+        <div class="spinner-border text-primary" style="width: 3rem; height: 3rem" role="status"></div>
+        <p class="mt-3 text-muted">Chargement de vos réservations...</p>
+    </div>    
+
+    <!-- Aucune réservation -->
+    <div *ngIf="!loading && reservations.length === 0" class="alert alert-info text-center">        
+        Aucune réservation                    
+    </div>    
+
+    <!-- Liste des réservations -->
+    <div *ngIf="!loading && reservations.length > 0" class="fade-in">
+        <div class="d-flex justify-content-end mb-4">
+            <button class="btn btn-outline-primary btn-glass" (click)="retourPanier()">
+                ⬅️ Retour au panier
+            </button>
         </div>
-    </div>
 
-    <div *ngIf="!loading && reservations.length === 0" class="alert alert-info text-center">
-        Aucune réservation trouvée.
-    </div>
-
-    <div *ngIf="!loading && reservations.length > 0">
-        <div class="text-end mb-4">
-            <button class="btn btn-outline-secondary" (click)="retourPanier()">⬅️ Retour au panier</button>
-        </div>
-
-        <div *ngFor="let res of reservations" class="card mb-4 shadow-lg rounded">
-            <div class="card-header bg-dark text-white">
-                <div class="d-flex justify-content-between flex-wrap">
-                    <div>
-                        <strong>Offre :</strong> {{ res.offre.nomOffre }}<br>
-                        <strong>Date :</strong> {{ res.dateReservation | date:'dd/MM/yyyy' }}
+        <div class="row g-4">
+            <div *ngFor="let res of reservations" class="col-12 col-md-6 col-lg-4">
+                <div class="card reservation-card border-0 rounded-4 overflow-hidden shadow-lg h-100">
+                    <!-- En-tête -->
+                    <div class="card-header py-4 text-white" [ngClass]="{
+              'bg-gradient-success': res.statut === 'Payée',
+              'bg-gradient-primary': res.statut !== 'Payée'
+            }">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h5 class="fw-bold mb-1">{{ res.offre.nomOffre }}</h5>
+                                <small class="text-light">📅 {{ res.dateReservation | date:'dd/MM/yyyy' }}</small>
+                            </div>
+                            <span class="badge bg-light text-dark px-3 py-2 rounded-pill">
+                                {{ res.statut }}
+                            </span>
+                        </div>
                     </div>
-                    <div *ngIf="res.statut !== 'Payée'">
-                        <button class="btn btn-success btn-lg" (click)="payerReservation(res.idReservation)">
+
+                    <!-- Corps -->
+                    <div class="card-body text-dark">
+                        <p class="mb-2">
+                            👤 <strong>{{ utilisateur?.prenom }} {{ utilisateur?.nom }}</strong>
+                        </p>
+                        <p class="text-muted small mb-0">
+                            Identifiant réservation : <strong>#{{ res.idReservation }}</strong>
+                        </p>
+                    </div>
+
+                    <!-- Pied -->
+                    <div class="card-footer text-center bg-transparent border-0 pb-4">
+                        <button *ngIf="res.statut !== 'Payée'"
+                            class="btn btn-primary w-75 rounded-pill shadow-sm pay-btn"
+                            (click)="payerReservation(res.idReservation)">
                             💳 Payer maintenant
                         </button>
-                    </div>
-                </div>
-            </div>
 
-            <div class="card-body">
-                <p><strong>Clé de réservation :</strong> {{ res.cleReservation }}</p>
-                <p><strong>Statut :</strong>
-                    <span class="badge" [ngClass]="{
-                            'bg-warning': res.statut === 'En attente',
-                            'bg-success': res.statut === 'Payée',
-                            'bg-secondary': res.statut !== 'En attente' && res.statut !== 'Payée'
-                          }">
-                        {{ res.statut }}
-                    </span>
-                </p>
-
-                <h5 class="mt-4 mb-3">🎫 Billets associés</h5>
-                <div class="row">
-                    <div *ngFor="let billet of res.billets" class="col-md-4 mb-3">
-                        <div class="card ticket-card shadow-sm h-100">
-                            <div class="card-body text-center d-flex flex-column justify-content-between">
-                                <div class="qrcode mb-3 p-2 border rounded">
-                                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data={{billet.qrCode}}"
-                                        alt="QR Code" class="img-fluid">
-                                </div>
-                                <p class="mb-1"><strong>Clé finale :</strong><br>{{ billet.cleFinale }}</p>
-                                <p class="mb-0"><strong>Statut :</strong> {{ billet.Statut }}</p>
-                            </div>
-                            <div class="card-footer text-center small text-muted">
-                                <strong>{{ utilisateur?.prenom }} {{ utilisateur?.nom }}</strong>
-                            </div>
+                        <div *ngIf="res.statut === 'Payée'" class="text-success fw-bold mt-2">
+                            ✅ Déjà payée
                         </div>
                     </div>
                 </div>

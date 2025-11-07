@@ -29,7 +29,7 @@ export class Reservation implements OnInit {
     }
 
     const user = JSON.parse(userData);
-    this.chargerReservations(user.idUtilisateur);
+    //this.chargerReservations(user.idUtilisateur);
   }
 
   chargerReservations(idUtilisateur: number): void {
@@ -38,9 +38,13 @@ export class Reservation implements OnInit {
       .subscribe({
         next: (data: any) => {
           this.utilisateur = data.utilisateur;
-          this.reservations = data.reservations;
 
-          // ✅ Convertir en Date et trier par date décroissante
+          // Filtrer les réservations avant tout traitement
+          this.reservations = (data.reservations || []).filter(
+            (r: any) => r.statut !== 'Payée' && r.Statut !== 'Payée'
+          );
+
+          // Convertir en Date et trier par date décroissante
           this.reservations.forEach(res => {
             res.dateReservation = new Date(res.dateReservation);
           });
@@ -57,12 +61,14 @@ export class Reservation implements OnInit {
           this.loading = false;
         }
       });
+
   }
 
 
   retourPanier(): void {
     this.router.navigate(['/panier']);
   }
+
 
   // ✅ Nouvelle méthode pour aller vers la page de paiement
   payerReservation(idReservation: number) {
@@ -92,6 +98,10 @@ export class Reservation implements OnInit {
       console.error('Erreur dans isPayerVisible:', e);
       return false;
     }
+  }
+
+  retourOffres(): void {
+    this.router.navigate(['/offres']);
   }
 
 
