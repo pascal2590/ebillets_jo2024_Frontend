@@ -25,7 +25,7 @@
             <div class="card-body">
                 <p><strong>Clé finale :</strong><br>{{ billet.cleFinale }}</p>
                 <p><strong>Statut :</strong>
-                    <span class="badge bg-success" *ngIf="billet.statut === 'Valide'">Valide</span>
+                    <span class="badge bg-success" *ngIf="billet.statut === 'Valide'">{{ billet.statut }}</span>
                     <span class="badge bg-secondary" *ngIf="billet.statut !== 'Valide'">{{ billet.statut }}</span>
                 </p>
 

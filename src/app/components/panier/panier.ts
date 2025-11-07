@@ -1,78 +1,126 @@
-// src/app/components/panier/panier.ts
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
+import { PanierService } from '../../services/panier.service'; // 🧩 à ajuster selon ton chemin réel
+import { HttpClientModule } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { PanierService } from '../../services/panier.service';
+
 
 @Component({
   selector: 'app-panier',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, HttpClientModule],
   templateUrl: './panier.html',
   styleUrls: ['./panier.css']
 })
-export class Panier implements OnInit {
+export class PanierComponent implements OnInit {
   panier: any[] = [];
-  loading = false;
 
   constructor(
     private panierService: PanierService,
-    private http: HttpClient,
     private router: Router
   ) { }
-
   ngOnInit(): void {
-    this.panier = this.panierService.getPanier();
+    this.chargerPanier();
   }
 
+  /** 🔹 Recharge les données du panier depuis l'API' */
+  chargerPanier(): void {
+    const user = JSON.parse(localStorage.getItem('user') || '{}');
+
+    if (!user || !user.idUtilisateur) {
+      this.panier = [];
+      return;
+    }
+
+    this.panierService.getPanierFromApi(user.idUtilisateur).subscribe({
+      next: (res) => {
+        console.log('📦 Panier chargé depuis l’API:', res);
+
+        // Le backend renvoie un objet Panier avec une liste PaniersOffres
+        this.panier = res.paniersOffres?.map((po: any) => ({
+          idOffre: po.offre.idOffre,
+          nomOffre: po.offre.nomOffre,
+          prix: po.offre.prix,
+          quantite: po.quantite
+        })) || [];
+      },
+      error: (err) => {
+        console.error('❌ Erreur lors du chargement du panier:', err);
+        this.panier = [];
+      }
+    });
+  }
+
+
+  /** 🔹 Supprime une offre du panier coté serveur et côt*/
   supprimer(idOffre: number): void {
-    this.panierService.supprimer(idOffre);
-    this.panier = this.panierService.getPanier();
+    const user = JSON.parse(localStorage.getItem('user') || '{}');
+    if (!user || !user.idUtilisateur) {
+      alert('⚠️ Vous devez être connecté pour supprimer une offre du panier.');
+      return;
+    }
+
+    this.panierService.supprimerServeur(user.idUtilisateur, idOffre).subscribe({
+      next: (res) => {
+        console.log('✅ Supprimé du serveur :', res);
+        this.panierService.supprimer(idOffre); // Supprime aussi localement
+        this.chargerPanier();
+      },
+      error: (err) => {
+        console.error('❌ Erreur suppression panier :', err);
+        alert('Une erreur est survenue lors de la suppression.');
+      }
+    });
   }
 
+
+  /** 🔹 Vide complètement le panier */
   vider(): void {
-    this.panierService.vider();
-    this.panier = [];
+    if (confirm('Voulez-vous vraiment vider votre panier ?')) {
+      // 🔹 Suppression du panier dans le localStorage
+      localStorage.removeItem('panier');
+
+      // 🔹 Réinitialisation du tableau local
+      this.panier = [];
+
+      alert('🗑️ Panier vidé avec succès.');
+    }
   }
 
+
+  /** 🔹 Envoie le panier à l’API ASP.NET Core pour créer les réservations */
   ouvrirReservation(): void {
-    const userData = localStorage.getItem('user');
-    if (!userData) {
-      alert('Veuillez vous connecter pour réserver.');
-      this.router.navigate(['/connexion']);
+    const user = JSON.parse(localStorage.getItem('user') || '{}');
+
+    if (!user || !user.idUtilisateur) {
+      alert('⚠️ Vous devez être connecté pour finaliser la réservation.');
       return;
     }
 
-    const user = JSON.parse(userData);
-    const panier = this.panierService.getPanier();
+    this.panierService.commander(user.idUtilisateur).subscribe({
+      next: async (res: any) => {
+        console.log('✅ Réponse API:', res);
 
-    if (panier.length === 0) {
-      alert('Votre panier est vide.');
-      return;
-    }
+        // Supprimer chaque offre commandée côté serveur
+        for (let item of this.panier) {
+          await this.panierService.supprimerOffre(user.idUtilisateur, item.idOffre).toPromise();
+        }
 
-    const requete = {
-      idUtilisateur: user.idUtilisateur,
-      panier: panier.map(o => ({
-        idOffre: o.idOffre,
-        quantite: 1
-      }))
-    };
+        // Supprimer localement
+        this.panierService.vider();
+        this.panier = [];
 
-    this.loading = true;
-    this.http.post('http://localhost:5000/api/Reservation/commander', requete)
-      .subscribe({
-        next: () => {
-          this.panierService.vider();
-          this.router.navigate(['/reservation']);
-        },
-        error: (err) => {
-          console.error('Erreur réservation :', err);
-          alert('Une erreur est survenue lors de la réservation.');
-        },
-        complete: () => this.loading = false
-      });
+        alert('🎉 Votre commande a été enregistrée avec succès !');
+
+        // Redirection
+        this.router.navigate(['/reservation']);
+      },
+      error: (err) => {
+        console.error('❌ Erreur API:', err);
+        alert('Une erreur est survenue lors de la réservation.');
+      }
+    });
   }
-
 }
+
+

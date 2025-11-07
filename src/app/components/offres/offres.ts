@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
+import { PanierService } from '../../services/panier.service';
 
 @Component({
   selector: 'app-offres',
@@ -15,7 +16,11 @@ export class Offres implements OnInit {
   loading = false;
   error: string | null = null;
 
-  constructor(private http: HttpClient, private router: Router) { }
+  constructor(
+    private http: HttpClient,
+    private router: Router,
+    private panierService: PanierService
+  ) { }
 
   ngOnInit(): void {
     this.chargerOffres();
@@ -23,14 +28,12 @@ export class Offres implements OnInit {
 
   chargerOffres(): void {
     this.loading = true;
-    this.error = null;
-
     this.http.get<any[]>('http://192.168.1.196:5000/api/Offre').subscribe({
-      next: res => {
+      next: (res) => {
         this.offres = res;
         this.loading = false;
       },
-      error: err => {
+      error: () => {
         this.error = 'Impossible de charger les offres.';
         this.loading = false;
       }
@@ -38,46 +41,32 @@ export class Offres implements OnInit {
   }
 
   ajouterAuPanier(offre: any): void {
-    const user = localStorage.getItem('user');
+    const user = JSON.parse(localStorage.getItem('user') || '{}');
 
-    // ✅ Si l'utilisateur n'est pas connecté
-    if (!user) {
-      const aUnCompte = confirm(
-        "⚠️ Vous devez être connecté pour ajouter une offre au panier.\n\n" +
-        "Avez-vous déjà un compte ?\n\n" +
-        "👉 Sélectionner OK si OUI\n" +
-        "👉 Sélectionner Annuler pour créer un compte"
-      );
-
-      if (aUnCompte) {
-        // Redirection vers la page de connexion
-        localStorage.setItem('pendingOffer', JSON.stringify(offre));
-        this.router.navigate(['/connexion']);
-      } else {
-        // Redirection vers la page d’inscription
-        localStorage.setItem('pendingOffer', JSON.stringify(offre));
-        this.router.navigate(['/inscription']);
-      }
-
+    if (!user || !user.idUtilisateur) {
+      alert('⚠️ Vous devez être connecté pour ajouter au panier.');
       return;
     }
 
-    // ✅ Si l'utilisateur est connecté
-    this.ajouterOffreDansPanier(offre);
-  }
-
-  ajouterOffreDansPanier(offre: any): void {
-    // On récupère le panier existant ou on le crée
+    // 🔹 Vérifie dans le localStorage si l’offre existe déjà
     const panier = JSON.parse(localStorage.getItem('panier') || '[]');
+    const dejaDansPanier = panier.some((item: any) => item.idOffre === offre.idOffre);
 
-    // Vérifie si l'offre existe déjà
-    const existe = panier.find((item: any) => item.idOffre === offre.idOffre);
-    if (!existe) {
-      panier.push(offre);
-      localStorage.setItem('panier', JSON.stringify(panier));
-      alert(`✅ "${offre.nomOffre}" a été ajouté au panier.`);
-    } else {
+    if (dejaDansPanier) {
       alert(`ℹ️ "${offre.nomOffre}" est déjà dans votre panier.`);
+      return; // ✅ on stoppe ici si doublon
     }
+
+    // 🔹 Sinon, on appelle l’API et on ajoute localement
+    this.panierService.ajouterAuPanier(user.idUtilisateur, offre.idOffre).subscribe({
+      next: () => {
+        this.panierService.ajouterLocal(offre); // ✅ affichage instantané
+        alert(`✅ "${offre.nomOffre}" a été ajoutée au panier !`);
+      },
+      error: (err) => {
+        console.error('❌ Erreur ajout panier:', err);
+        alert('Erreur lors de l’ajout au panier.');
+      }
+    });
   }
 }

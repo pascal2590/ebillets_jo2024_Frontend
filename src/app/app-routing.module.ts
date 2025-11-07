@@ -3,7 +3,7 @@ import { Accueil } from './components/accueil/accueil';
 import { Offres } from './components/offres/offres';
 import { Connexion } from './components/connexion/connexion';
 import { Inscription } from './components/inscription/inscription';
-import { Panier } from './components/panier/panier';
+import { PanierComponent } from './components/panier/panier';
 import { authGuard } from './services/auth.guard';
 import { Paiement } from './components/paiement/paiement';
 import { MesBillets } from './components/mes-billets/mes-billets';
@@ -19,7 +19,7 @@ export const routes: Routes = [
     { path: 'inscription', component: Inscription },
 
     // ✅ Routes protégées
-    { path: 'panier', component: Panier, canActivate: [authGuard] },
+    { path: 'panier', component: PanierComponent, canActivate: [authGuard] },
     { path: 'paiement/:idReservation', component: Paiement, canActivate: [authGuard] },
     { path: 'mes-billets', component: MesBillets, canActivate: [authGuard] },
     { path: 'reservation', component: Reservation, canActivate: [authGuard] },

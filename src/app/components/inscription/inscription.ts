@@ -34,14 +34,20 @@ export class Inscription {
 
     this.loading = true;
 
-    this.http.post<any>('https://localhost:5001/api/Auth/register', {
+    // 🔹 URL dynamique HTTP pour PC et mobile
+    const LOCAL_IP = '192.168.1.196'; // IP de ton PC
+    const serverUrl = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
+      ? 'http://localhost:5000'
+      : `http://${LOCAL_IP}:5000`;
+
+    this.http.post<any>(`${serverUrl}/api/Auth/register`, {
       nom: this.nom,
       prenom: this.prenom,
       email: this.email,
       password: this.password
     }).subscribe({
       next: res => {
-        this.message = res.message;
+        this.message = res.message || "Compte créé ✅";
         this.loading = false;
 
         // Redirection après 1 seconde
@@ -50,7 +56,7 @@ export class Inscription {
         }, 1000);
       },
       error: err => {
-        this.error = err.error || "Une erreur est survenue lors de l'inscription.";
+        this.error = err.error?.message || "Une erreur est survenue lors de l'inscription.";
         this.loading = false;
       }
     });

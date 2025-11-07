@@ -39,8 +39,14 @@ export class Reservation implements OnInit {
         next: (data: any) => {
           this.utilisateur = data.utilisateur;
           this.reservations = data.reservations;
+
+          // ✅ Convertir en Date et trier par date décroissante
           this.reservations.forEach(res => {
             res.dateReservation = new Date(res.dateReservation);
+          });
+
+          this.reservations.sort((a, b) => {
+            return b.dateReservation.getTime() - a.dateReservation.getTime();
           });
         },
         error: (err) => {
@@ -52,6 +58,7 @@ export class Reservation implements OnInit {
         }
       });
   }
+
 
   retourPanier(): void {
     this.router.navigate(['/panier']);
@@ -71,6 +78,23 @@ export class Reservation implements OnInit {
   allerPaiement(idReservation: number) {
     this.router.navigate(['/paiement', idReservation]);
   }
+
+  isPayerVisible(reservation: any): boolean {
+    try {
+      // Si la réservation n’a pas encore de billets, on autorise le paiement
+      if (!reservation || !reservation.Billets) {
+        return true;
+      }
+
+      // Si au moins un billet n’est pas encore payé → on affiche le bouton
+      return reservation.Billets.some((b: any) => b.Statut === 'En attente' || b.Statut === 'Valide');
+    } catch (e) {
+      console.error('Erreur dans isPayerVisible:', e);
+      return false;
+    }
+  }
+
+
 
   
 

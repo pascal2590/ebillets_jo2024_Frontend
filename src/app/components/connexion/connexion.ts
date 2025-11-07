@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { Router, RouterLink } from '@angular/router';
-import { AuthService } from '../../services/auth.service'; // ← import du service AuthService
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-connexion',
@@ -26,7 +26,13 @@ export class Connexion {
     this.message = null;
     this.loading = true;
 
-    this.http.post<any>('https://localhost:5001/api/Auth/login', {
+    // 🔹 URL dynamique HTTP pour PC et mobile
+    const LOCAL_IP = '192.168.1.196'; // IP de ton PC
+    const serverUrl = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
+      ? 'http://localhost:5000'
+      : `http://${LOCAL_IP}:5000`;
+
+    this.http.post<any>(`${serverUrl}/api/Auth/login`, {
       email: this.email,
       password: this.password
     }).subscribe({
@@ -34,17 +40,14 @@ export class Connexion {
         this.loading = false;
         this.message = "Connexion réussie ✅";
 
-        // 🔹 Sauvegarde du token si nécessaire
         if (res.token) {
           localStorage.setItem('token', res.token);
         }
 
-        // 🔹 Sauvegarde et notification via AuthService
         if (res.utilisateur) {
           this.authService.login(res.utilisateur);
         }
 
-        // 🔹 Redirection vers l'accueil (SPA fluide)
         this.router.navigate(['/']);
       },
       error: err => {

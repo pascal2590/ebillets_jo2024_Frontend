@@ -47,7 +47,7 @@ export class MesBillets implements OnInit {
     });
   }
 
-  // 🔹 Ajoute cette méthode si tu veux un bouton "Retour au panier"
+  // 🔹 Ajout d'un bouton "Retour au panier"
   retourPanier(): void {
     this.router.navigate(['/panier']);
   }
