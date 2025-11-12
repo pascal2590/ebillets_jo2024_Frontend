@@ -29,7 +29,7 @@ export class Reservation implements OnInit {
     }
 
     const user = JSON.parse(userData);
-    //this.chargerReservations(user.idUtilisateur);
+    this.chargerReservations(user.idUtilisateur);
   }
 
   chargerReservations(idUtilisateur: number): void {
@@ -52,6 +52,8 @@ export class Reservation implements OnInit {
           this.reservations.sort((a, b) => {
             return b.dateReservation.getTime() - a.dateReservation.getTime();
           });
+
+          console.log('Réservations chargées :', this.reservations);
         },
         error: (err) => {
           console.error('Erreur chargement réservations :', err);
@@ -59,9 +61,8 @@ export class Reservation implements OnInit {
         },
         complete: () => {
           this.loading = false;
-        }
+        }        
       });
-
   }
 
 

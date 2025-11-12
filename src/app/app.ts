@@ -12,6 +12,7 @@ import { AuthService } from './services/auth.service';
 })
 export class App {
   user: any = null;
+  isAdmin: boolean = false; // ✅ Nouveau
 
   constructor(private router: Router, private authService: AuthService) { }
 
@@ -19,6 +20,7 @@ export class App {
     // S'abonner aux changements du user
     this.authService.user$.subscribe(user => {
       this.user = user;
+      this.isAdmin = user && user.role === 2; // ✅ Vérifie le rôle
     });
   }
 

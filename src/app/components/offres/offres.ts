@@ -15,6 +15,7 @@ export class Offres implements OnInit {
   offres: any[] = [];
   loading = false;
   error: string | null = null;
+  isAdmin = false; // ✅ ajout
 
   constructor(
     private http: HttpClient,
@@ -23,6 +24,10 @@ export class Offres implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    // ✅ Détection du rôle utilisateur
+    const user = JSON.parse(localStorage.getItem('user') || '{}');
+    this.isAdmin = user && user.role === 2; // adapte selon ton backend (ADMIN / admin / Administrateur)
+
     this.chargerOffres();
   }
 
@@ -48,19 +53,17 @@ export class Offres implements OnInit {
       return;
     }
 
-    // 🔹 Vérifie dans le localStorage si l’offre existe déjà
     const panier = JSON.parse(localStorage.getItem('panier') || '[]');
     const dejaDansPanier = panier.some((item: any) => item.idOffre === offre.idOffre);
 
     if (dejaDansPanier) {
       alert(`ℹ️ "${offre.nomOffre}" est déjà dans votre panier.`);
-      return; // ✅ on stoppe ici si doublon
+      return;
     }
 
-    // 🔹 Sinon, on appelle l’API et on ajoute localement
     this.panierService.ajouterAuPanier(user.idUtilisateur, offre.idOffre).subscribe({
       next: () => {
-        this.panierService.ajouterLocal(offre); // ✅ affichage instantané
+        this.panierService.ajouterLocal(offre);
         alert(`✅ "${offre.nomOffre}" a été ajoutée au panier !`);
       },
       error: (err) => {

@@ -1,0 +1,13 @@
+.container {
+    max-width: 900px;
+}
+
+h2 {
+    font-weight: 600;
+    color: #004aad;
+}
+
+.table {
+    border-radius: 10px;
+    overflow: hidden;
+}
