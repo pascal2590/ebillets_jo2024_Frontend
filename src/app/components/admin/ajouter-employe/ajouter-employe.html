@@ -1,0 +1,28 @@
+<div class="container mt-5">
+    <h2>Ajouter un employé</h2>
+
+    <form (ngSubmit)="creerEmploye()" #form="ngForm">
+
+        <div class="mb-3">
+            <label for="nom">Nom</label>
+            <input id="nom" type="text" class="form-control" [(ngModel)]="employe.nom" name="nom" required title="Nom de l'employé" placeholder="Entrez le nom">
+        </div>
+
+        <div class="mb-3">
+            <label for="prenom">Prénom</label>
+            <input id="prenom" type="text" class="form-control" [(ngModel)]="employe.prenom" name="prenom" required title="Prénom de l'employé" placeholder="Entrez le prénom">
+        </div>
+
+        <div class="mb-3">
+            <label for="email">Email</label>
+            <input id="email" type="email" class="form-control" [(ngModel)]="employe.email" name="email" required title="Adresse e-mail" placeholder="exemple@domaine.com">
+        </div>
+
+        <div class="mb-3">
+            <label for="motDePasse">Mot de passe</label>
+            <input id="motDePasse" type="password" class="form-control" [(ngModel)]="employe.motDePasse" name="motDePasse" required title="Mot de passe" placeholder="Choisissez un mot de passe">
+        </div>
+
+        <button class="btn btn-success" [disabled]="form.invalid">Créer</button>
+    </form>
+</div>

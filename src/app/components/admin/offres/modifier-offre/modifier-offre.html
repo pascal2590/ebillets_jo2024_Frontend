@@ -1,0 +1,60 @@
+<div class="container mt-5 d-flex justify-content-center">
+
+    <div class="modifier-offre-box w-100" style="max-width: 600px;">
+
+        <h2 class="text-center mb-4">Modifier une offre</h2>
+
+        <!-- Sélection de l'offre -->
+        <div class="mb-4">
+            <label for="selectedOffre" class="form-label">Choisir une offre à modifier :</label>
+            <select id="selectedOffre" class="form-select" [(ngModel)]="selectedOffreId" (change)="chargerOffre()" name="selectedOffre">
+                <option value="" disabled selected>-- Sélectionnez une offre --</option>
+                <option *ngFor="let o of offres" [value]="o.idOffre">{{ o.nomOffre }}</option>
+            </select>
+        </div>
+
+        <!-- Messages -->
+        <div *ngIf="message" class="alert alert-success text-center">
+            {{ message }}
+        </div>
+        <div *ngIf="erreur" class="alert alert-danger text-center">
+            {{ erreur }}
+        </div>
+
+        <!-- Formulaire -->
+        <form *ngIf="isLoaded" (ngSubmit)="onSubmit()" class="form-box">
+            <div class="mb-3">
+                <label class="form-label">Nom de l'offre *</label>
+                <input type="text" class="form-control" [(ngModel)]="offre.nomOffre" name="nomOffre" required
+                    placeholder="Entrez le nom de l'offre">
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Description</label>
+                <textarea class="form-control" rows="4" [(ngModel)]="offre.description" name="description"
+                    placeholder="Entrez une description"></textarea>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Nombre de personnes *</label>
+                <input type="number" class="form-control" [(ngModel)]="offre.nbPersonnes" name="nbPersonnes" required
+                    placeholder="1">
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Prix (€) *</label>
+                <input type="number" class="form-control" [(ngModel)]="offre.prix" name="prix" required
+                    placeholder="0.00">
+            </div>
+
+            <!-- Bouton centré -->
+            <div class="text-center mt-4">
+                <button class="btn btn-primary px-5" type="submit">
+                    Valider
+                </button>
+            </div>
+
+        </form>
+
+    </div>
+</div>

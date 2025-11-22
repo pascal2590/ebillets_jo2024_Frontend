@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-inscription',
@@ -21,7 +21,22 @@ export class Inscription {
   error: string | null = null;
   loading = false;
 
-  constructor(private http: HttpClient, private router: Router) { }
+  // Rôle par défaut : Client
+  role: string = 'Client';
+
+  constructor(
+    private http: HttpClient,
+    private router: Router,
+    private route: ActivatedRoute
+  ) { }
+
+  ngOnInit() {
+    // Si l'admin crée un employé, on récupère le rôle depuis la route
+    const dataRole = this.route.snapshot.data['role'];
+    if (dataRole) {
+      this.role = dataRole; // 'Employe'
+    }
+  }
 
   onSubmit(): void {
     this.error = null;
@@ -34,25 +49,32 @@ export class Inscription {
 
     this.loading = true;
 
-    // 🔹 URL dynamique HTTP pour PC et mobile
-    const LOCAL_IP = '192.168.1.196'; // IP de ton PC
+    const LOCAL_IP = '192.168.1.196';
     const serverUrl = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
       ? 'http://localhost:5000'
       : `http://${LOCAL_IP}:5000`;
 
+    // POST vers le backend en incluant le rôle
     this.http.post<any>(`${serverUrl}/api/Auth/register`, {
       nom: this.nom,
       prenom: this.prenom,
       email: this.email,
-      password: this.password
+      password: this.password,
+      role: this.role // Important : 'Client' ou 'Employe'
     }).subscribe({
       next: res => {
         this.message = res.message || "Compte créé ✅";
         this.loading = false;
 
-        // Redirection après 1 seconde
+        // Redirection après création
         setTimeout(() => {
-          this.router.navigate(['/connexion']);
+          if (this.role === 'Employe') {
+            // Retour vers l'administration
+            this.router.navigate(['/admin/offres']);
+          } else {
+            // Client normal : vers la page de connexion
+            this.router.navigate(['/connexion']);
+          }
         }, 1000);
       },
       error: err => {

@@ -22,7 +22,7 @@ export class AdminOffresComponent implements AfterViewInit {
   constructor(private http: HttpClient) { }
 
   ngAfterViewInit() {
-    // On attend un petit délai pour être sûr que le template et les données soient prêts
+    // Petit délai pour être sûr que le template et les données soient prêts
     this.chargerVentes();
   }
 
@@ -33,7 +33,7 @@ export class AdminOffresComponent implements AfterViewInit {
           this.ventes = data;
           this.loading = false;
 
-          // Attendre un petit délai avant d’appeler le graphique
+          // Petit délai avant d’appeler le graphique
           setTimeout(() => {
             this.creerGraphique();
           }, 100);

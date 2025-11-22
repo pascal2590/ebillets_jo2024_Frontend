@@ -1,0 +1,60 @@
+<div class="container mt-4" style="max-width: 700px;">
+
+    <h2 class="text-center mb-4">📸 Scanner un billet</h2>
+
+    <!-- Message d'erreur si permission refusée -->
+    <div *ngIf="!hasPermission && errorMessage" class="alert alert-danger text-center">
+        <strong>{{ errorMessage }}</strong>
+        <br>
+        <button class="btn btn-primary mt-2" (click)="retryCamera()">🔄 Réessayer la caméra</button>
+    </div>
+
+    <!-- Carte principale -->
+    <div class="card shadow-lg p-3">
+
+        <!-- Sélection caméra -->
+        <div class="mb-3">
+            <label class="form-label fw-bold">Sélectionnez la caméra :</label>
+            <select id="deviceSelect" [(ngModel)]="currentDevice" class="form-select">
+                <option *ngFor="let cam of availableDevices" [ngValue]="cam">
+                    {{ cam.label }}
+                </option>
+            </select>
+        </div>
+
+        <!-- Boutons Start / Stop -->
+        <div class="d-flex justify-content-center gap-2 mb-3">
+            <button class="btn btn-success" (click)="startScanner()" [disabled]="scannerStarted">
+                ▶ Démarrer le scanner
+            </button>
+
+            <button class="btn btn-danger" (click)="stopScanner()" [disabled]="!scannerStarted">
+                ⛔ Arrêter
+            </button>
+        </div>
+
+        <!-- Zone caméra -->
+        <div *ngIf="scannerStarted" class="camera-wrapper d-flex justify-content-center">
+
+            <div class="camera-frame">
+                <zxing-scanner (scanSuccess)="onCodeResult($event)" (camerasFound)="onCamerasFound($event)"
+                    (permissionResponse)="onHasPermission($event)" [device]="currentDevice">
+                </zxing-scanner>
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Résultat scan -->
+    <div class="mt-4 text-center">
+        <p *ngIf="qrCodeResult" class="alert alert-info">
+            <strong>QR Code lu :</strong> {{ qrCodeResult }}
+        </p>
+
+        <p *ngIf="message" class="alert alert-success">
+            <strong>Résultat :</strong> {{ message }}
+        </p>
+    </div>
+
+</div>

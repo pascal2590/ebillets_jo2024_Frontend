@@ -136,3 +136,34 @@ footer {
     color: #333;
 }
 
+.tricolore {
+    background: linear-gradient(to right, #0055A4, #FFFFFF, #EF4135);
+    /* bleu, blanc, rouge */
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    /* pour les navigateurs modernes */
+    text-align: center;
+}
+
+.tricolore-anim {
+    background: linear-gradient(90deg, #0055A4, #FFFFFF, #EF4135, #0055A4);
+    background-size: 300% 100%;
+    /* plus grand que le texte pour l'animation */
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: defilement 5s linear infinite;
+    /* animation continue */
+    text-align: center;
+}
+
+@keyframes defilement {
+    0% {
+        background-position: 0% 0%;
+    }
+
+    100% {
+        background-position: 100% 0%;
+    }
+}

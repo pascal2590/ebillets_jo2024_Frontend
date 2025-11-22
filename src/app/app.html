@@ -9,41 +9,67 @@
 
     <div class="collapse navbar-collapse" id="navbarNav">
       <ul class="navbar-nav ms-auto me-3 align-items-center">
-      
+
         <!-- Liens communs -->
         <li class="nav-item">
           <a class="nav-link" routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
             Accueil
-          </a>          
+          </a>
         </li>
-        <li class="nav-item">
-          <a class="nav-link" routerLink="/offres" routerLinkActive="active">Offres</a>
-        </li>
-      
-        <!-- ✅ Si l'utilisateur est un administrateur -->
-        <ng-container *ngIf="isAdmin">
+        
+        <ng-container *ngIf="!isEmploye">
           <li class="nav-item">
-            <a class="nav-link" routerLink="/admin/offres" routerLinkActive="active">Visualiser les offres</a>
+            <a class="nav-link" routerLink="/offres" routerLinkActive="active">Offres</a>
           </li>
         </ng-container>
-      
-        <!-- ✅ Si l'utilisateur n'est PAS un administrateur -->
-        <ng-container *ngIf="user && !isAdmin">          
-      
+
+        <!-- Liens pour client uniquement -->
+        <ng-container *ngIf="user && !isAdmin && !isEmploye">
+          <li class="nav-item">
+            <a class="nav-link" routerLink="/offres" routerLinkActive="active">Offres</a>
+          </li>
           <li class="nav-item">
             <a class="nav-link" routerLink="/panier" routerLinkActive="active">🛒 Panier</a>
           </li>
-      
           <li class="nav-item">
             <a class="nav-link" routerLink="/reservation" routerLinkActive="active">Mes réservations</a>
           </li>
-      
           <li class="nav-item">
             <a class="nav-link" routerLink="/mes-billets" routerLinkActive="active">Mes billets</a>
           </li>
         </ng-container>
-      
-        <!-- ✅ Utilisateur connecté -->
+
+        <!-- Liens Admin -->
+        <ng-container *ngIf="isAdmin">
+          <li class="nav-item">
+            <a class="nav-link" routerLink="/admin/offres" routerLinkActive="active">Visualiser les ventes</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" routerLink="/admin/employes/ajouter" routerLinkActive="active">Ajouter un employé</a>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              Offres
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end">
+              <li><a class="dropdown-item" routerLink="/offres" routerLinkActive="active">Visualiser</a></li>
+              <li><a class="dropdown-item" routerLink="/admin/offres/ajouter">Ajouter</a></li>
+              <li><a class="dropdown-item" routerLink="/admin/offres/modifier">Modifier</a></li>
+            </ul>
+          </li>
+        </ng-container>
+
+        <!-- Liens Employé -->
+        <ng-container *ngIf="isEmploye">
+          <li class="nav-item">
+            <a class="nav-link" routerLink="/employe/scanner" routerLinkActive="active">Scanner Billets</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" routerLink="/employe/liste-billets" routerLinkActive="active">Billets Scannés</a>
+          </li>
+        </ng-container>
+
+        <!-- Utilisateur connecté -->
         <ng-container *ngIf="user">
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle text-white" href="#" role="button" data-bs-toggle="dropdown"
@@ -57,8 +83,8 @@
             </ul>
           </li>
         </ng-container>
-      
-        <!-- ✅ Utilisateur non connecté -->
+
+        <!-- Utilisateur non connecté -->
         <ng-container *ngIf="!user">
           <li class="nav-item">
             <a class="nav-link" routerLink="/connexion" routerLinkActive="active">Connexion</a>
@@ -67,9 +93,8 @@
             <a class="nav-link" routerLink="/inscription" routerLinkActive="active">Inscription</a>
           </li>
         </ng-container>
-      
-      </ul>
 
+      </ul>
     </div>
   </div>
 </nav>
