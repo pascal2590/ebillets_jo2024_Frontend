@@ -9,9 +9,23 @@ export class AuthService {
 
     constructor(private http: HttpClient) { }
 
-    login(user: any) {
+    login(email: string, password: string, serverUrl: string): Observable<any> {
+        const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+        return this.http.post<any>(`${serverUrl}/api/Auth/login`, { email, password }, { headers });
+    }
+
+    register(userData: any, serverUrl: string): Observable<any> {
+        const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+        return this.http.post(`${serverUrl}/api/Auth/register`, userData, { headers });
+    }
+
+    loginUser(user: any) {
         localStorage.setItem('user', JSON.stringify(user));
         this._user.next(user);
+    }
+
+    setUser(user: any) {
+        this.loginUser(user);
     }
 
     logout() {
@@ -22,21 +36,4 @@ export class AuthService {
     getUser() {
         return this._user.value;
     }
-
-    // -------------------------------
-    // Créer un compte
-    // -------------------------------
-    register(userData: any): Observable<any> {
-        const LOCAL_IP = '192.168.1.196'; // ← IP de ton PC
-        const serverUrl = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
-            ? 'http://localhost'
-            : `http://${LOCAL_IP}`;
-
-        const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
-
-        return this.http.post(`${serverUrl}/ebillets_jo2024/register.php`, userData, { headers });
-    }
-
-
-
 }

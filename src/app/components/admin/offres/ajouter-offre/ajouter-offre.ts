@@ -36,7 +36,8 @@ export class AjouterOffreComponent {
       return;
     }
 
-    this.http.post("http://localhost:5000/api/Offre", this.offre)
+    //this.http.post("http://localhost:5000/api/Offre", this.offre)
+    this.http.post("http://192.168.1.196:5000/api/Offre", this.offre)
       .subscribe({
         next: () => {
           this.message = "Offre ajoutée avec succès !";

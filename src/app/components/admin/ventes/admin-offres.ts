@@ -27,7 +27,7 @@ export class AdminOffresComponent implements AfterViewInit {
   }
 
   chargerVentes() {
-    this.http.get<any[]>('http://localhost:5000/api/Admin/ventes-par-offre')
+    this.http.get<any[]>('http://192.168.1.196:5000/api/Admin/ventes-par-offre')
       .subscribe({
         next: (data) => {
           this.ventes = data;

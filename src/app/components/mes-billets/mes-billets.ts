@@ -31,7 +31,7 @@ export class MesBillets implements OnInit {
 
   chargerBillets(idUtilisateur: number): void {
     this.loading = true;
-    this.http.get<any[]>(`https://localhost:5001/api/Billet/utilisateur/${idUtilisateur}`).subscribe({
+    this.http.get<any[]>(`http://192.168.1.196:5000/api/Billet/utilisateur/${idUtilisateur}`).subscribe({
       next: (res) => {
         this.billets = res.sort(
           (a, b) => new Date(b.dateEmission).getTime() - new Date(a.dateEmission).getTime()

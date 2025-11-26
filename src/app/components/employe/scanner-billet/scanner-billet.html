@@ -14,7 +14,7 @@
 
         <!-- Sélection caméra -->
         <div class="mb-3">
-            <label class="form-label fw-bold">Sélectionnez la caméra :</label>
+            <label for="deviceSelect" class="form-label fw-bold">Sélectionnez la caméra :</label>
             <select id="deviceSelect" [(ngModel)]="currentDevice" class="form-select">
                 <option *ngFor="let cam of availableDevices" [ngValue]="cam">
                     {{ cam.label }}
@@ -24,30 +24,24 @@
 
         <!-- Boutons Start / Stop -->
         <div class="d-flex justify-content-center gap-2 mb-3">
-            <button class="btn btn-success" (click)="startScanner()" [disabled]="scannerStarted">
-                ▶ Démarrer le scanner
-            </button>
-
-            <button class="btn btn-danger" (click)="stopScanner()" [disabled]="!scannerStarted">
-                ⛔ Arrêter
-            </button>
+            <button class="btn btn-success" (click)="startScanner()" [disabled]="scannerStarted">▶ Démarrer le
+                scanner</button>
+            <button class="btn btn-danger" (click)="stopScanner()" [disabled]="!scannerStarted">⛔ Arrêter</button>
         </div>
 
         <!-- Zone caméra -->
         <div *ngIf="scannerStarted" class="camera-wrapper d-flex justify-content-center">
-
             <div class="camera-frame">
                 <zxing-scanner (scanSuccess)="onCodeResult($event)" (camerasFound)="onCamerasFound($event)"
                     (permissionResponse)="onHasPermission($event)" [device]="currentDevice">
                 </zxing-scanner>
             </div>
-
         </div>
 
     </div>
 
     <!-- Résultat scan -->
-    <div class="mt-4 text-center">
+    <div class="mt-4 text-center" *ngIf="qrCodeResult || message">
         <p *ngIf="qrCodeResult" class="alert alert-info">
             <strong>QR Code lu :</strong> {{ qrCodeResult }}
         </p>
@@ -55,6 +49,12 @@
         <p *ngIf="message" class="alert alert-success">
             <strong>Résultat :</strong> {{ message }}
         </p>
+
+        <!-- Affichage des infos du billet -->
+        <div *ngIf="billetInfo.nomOffre" class="alert alert-primary mt-2">
+            <p><strong>Offre :</strong> {{ billetInfo.nomOffre }}</p>
+            <p><strong>Client :</strong> {{ billetInfo.clientPrenom }} {{ billetInfo.clientNom }}</p>
+        </div>
     </div>
 
 </div>
