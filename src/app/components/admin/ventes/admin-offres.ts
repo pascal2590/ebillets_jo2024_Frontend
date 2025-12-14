@@ -2,6 +2,7 @@ import { Component, ElementRef, ViewChild, AfterViewInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Chart, registerables } from 'chart.js';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { environment } from '../../../../environments/environment';
 
 Chart.register(...registerables);
 
@@ -27,7 +28,7 @@ export class AdminOffresComponent implements AfterViewInit {
   }
 
   chargerVentes() {
-    this.http.get<any[]>('http://localhost:5000/api/Admin/ventes-par-offre')
+    this.http.get<any[]>(`${environment.apiUrl}/Admin/ventes-par-offre`)
       .subscribe({
         next: (data) => {
           this.ventes = data;

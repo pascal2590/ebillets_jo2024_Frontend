@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-reservation',
@@ -34,7 +35,7 @@ export class Reservation implements OnInit {
 
   chargerReservations(idUtilisateur: number): void {
     this.loading = true;
-    this.http.get(`https://localhost:5001/api/Reservation/utilisateur/${idUtilisateur}`)
+    this.http.get(`${environment.apiUrl}/Reservation/utilisateur/${idUtilisateur}`)
       .subscribe({
         next: (data: any) => {
           this.utilisateur = data.utilisateur;
@@ -104,10 +105,4 @@ export class Reservation implements OnInit {
   retourOffres(): void {
     this.router.navigate(['/offres']);
   }
-
-
-
-  
-
-
 }

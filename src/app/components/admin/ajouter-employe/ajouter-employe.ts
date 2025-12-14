@@ -5,6 +5,9 @@ import { HttpClient } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 
+// ⬅ Import de l'environnement pour accéder à l'IP du serveur
+import { environment } from '../../../../environments/environment';
+
 @Component({
   selector: 'app-ajouter-employe',
   standalone: true, // ⬅ Indispensable
@@ -26,7 +29,7 @@ export class AjouterEmployeComponent {
   constructor(private http: HttpClient) { }
 
   creerEmploye() {
-    this.http.post("http://localhost:5000/api/utilisateur/creer-employe", this.employe)
+    this.http.post(`${environment.apiUrl}/utilisateur/creer-employe`, this.employe)
       .subscribe({
         next: () => alert("Employé créé avec succès !"),
         error: err => alert("Erreur : " + err.error)

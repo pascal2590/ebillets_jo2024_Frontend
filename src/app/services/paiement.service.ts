@@ -1,13 +1,14 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { environment } from '../../environments/environment';
 
 @Injectable({
     providedIn: 'root'
 })
 export class PaiementService {
-    private apiUrl = 'https://localhost:5001/api/Paiement'; // ⚠️ adapte l’URL selon ton API
-    private reservationUrl = 'http://localhost:5000/api/Reservation'; // pour récupérer la réservation
+    private apiUrl = `${environment.apiUrl}/Paiement`; // ⚠️ adapter l’URL selon l'API
+    private reservationUrl = `${environment.apiUrl}/Reservation`; // pour récupérer la réservation
 
     constructor(private http: HttpClient) { }
 

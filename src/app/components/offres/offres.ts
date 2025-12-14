@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { PanierService } from '../../services/panier.service';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-offres',
@@ -33,7 +34,7 @@ export class Offres implements OnInit {
 
   chargerOffres(): void {
     this.loading = true;
-    this.http.get<any[]>('http://192.168.1.196:5000/api/Offre').subscribe({
+    this.http.get<any[]>(`${environment.apiUrl}/Offre`).subscribe({
       next: (res) => {
         this.offres = res;
         this.loading = false;

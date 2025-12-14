@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ZXingScannerModule } from '@zxing/ngx-scanner';
 import { HttpClient } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
+import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'app-scanner-billet',
@@ -12,15 +13,22 @@ import { FormsModule } from '@angular/forms';
   styleUrls: ['./scanner-billet.css']
 })
 export class ScannerBilletComponent {
-  qrCodeResult = '';
-  message = '';
-  errorMessage = '';
+  qrCodeResult = '';       // Code QR lu
+  message = '';            // Message de succès / erreur
+  errorMessage = '';       // Erreur d'accès caméra
 
-  hasPermission = false;
-  scannerStarted = false;
+  hasPermission = false;   // Permission caméra
+  scannerStarted = false;  // Scanner démarré ou non
 
   currentDevice: MediaDeviceInfo | undefined;
   availableDevices: MediaDeviceInfo[] = [];
+
+  // ⚡ Nouvel objet pour stocker les infos du billet scanné
+  billetInfo: {
+    nomOffre?: string;
+    clientNom?: string;
+    clientPrenom?: string;
+  } = {};
 
   constructor(private http: HttpClient) { }
 
@@ -31,7 +39,7 @@ export class ScannerBilletComponent {
     console.log("Caméras détectées :", devices);
     this.availableDevices = devices;
 
-    // Sélection automatique de la caméra contenant "WBE"
+    // Sélection automatique de la caméra contenant "WBE" sinon première caméra
     const wbeCam = devices.find(d => d.label.includes("WBE"));
     this.currentDevice = wbeCam ?? devices[0];
 
@@ -46,23 +54,39 @@ export class ScannerBilletComponent {
     console.log("Permission caméra :", this.hasPermission);
   }
 
-
   // ---------------------------
   // 📌 QR CODE SCANNÉ
   // ---------------------------
   onCodeResult(result: string) {
     this.qrCodeResult = result;
-    this.message = "Billet scanné !";
+    this.message = "Scan en cours...";
+    this.billetInfo = {}; // réinitialise les infos du billet
 
-    this.http.post(`http://localhost:5000/api/ScanBillet/${result}?idEmploye=1`, {})
+    this.http.post(`${environment.apiUrl}/ScanBillet/${result}`, {})
       .subscribe({
-        next: () => this.message = 'Billet validé !',
-        error: (err) => this.message = 'Erreur : ' + (err.error?.message || err.message)
+        next: (res: any) => {
+          // Message principal (nombre de scans)
+          this.message = res.message;
+
+          // Récupère le nom de l'offre et le nom/prénom du client
+          this.billetInfo.nomOffre = res.nomOffre;
+          this.billetInfo.clientNom = res.clientNom;
+          this.billetInfo.clientPrenom = res.clientPrenom;
+        },
+        error: (err) => {
+          if (err.status === 404) {
+            this.message = 'Billet invalide.';
+          } else if (err.status === 400) {
+            this.message = err.error?.message || 'Billet déjà scanné.';
+          } else {
+            this.message = 'Erreur : ' + (err.error?.message || err.message);
+          }
+        }
       });
   }
 
   // ---------------------------
-  // 📌 DÉMARRER
+  // 📌 DÉMARRER LE SCANNER
   // ---------------------------
   startScanner() {
     this.scannerStarted = true;
@@ -81,17 +105,18 @@ export class ScannerBilletComponent {
   }
 
   // ---------------------------
-  // 📌 ARRÊTER
+  // 📌 ARRÊTER LE SCANNER
   // ---------------------------
   stopScanner() {
     this.scannerStarted = false;
     this.message = '';
     this.qrCodeResult = '';
+    this.billetInfo = {};
     console.log("Caméra arrêtée.");
   }
 
   // ---------------------------
-  // 📌 RÉESSAYER
+  // 📌 RÉESSAYER LA CAMÉRA
   // ---------------------------
   retryCamera() {
     console.log("Tentative de reconnexion caméra...");

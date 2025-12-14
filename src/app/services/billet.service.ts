@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { environment } from '../../environments/environment';
 
 export interface Billet {
     idBillet: number;
@@ -19,7 +20,7 @@ export interface Billet {
 })
 export class BilletService {
 
-    private apiUrl = 'https://192.168.1.196:5000/api/Billet'; // 🔗 à adapter selon le port backend
+    private apiUrl = `${environment.apiUrl}/Billet`; // 🔗 à adapter selon le port backend
 
     constructor(private http: HttpClient) { }
 

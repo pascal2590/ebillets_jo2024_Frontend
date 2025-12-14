@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
+import { environment } from '../../../../../environments/environment';
 
 @Component({
   selector: 'app-ajouter-offre',
@@ -36,7 +37,7 @@ export class AjouterOffreComponent {
       return;
     }
 
-    this.http.post("http://localhost:5000/api/Offre", this.offre)
+    this.http.post(`${environment.apiUrl}/Offre`, this.offre)
       .subscribe({
         next: () => {
           this.message = "Offre ajoutée avec succès !";

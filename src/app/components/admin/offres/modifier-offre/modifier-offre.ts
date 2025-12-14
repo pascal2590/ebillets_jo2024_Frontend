@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
+import { environment } from '../../../../../environments/environment';
 
 @Component({
   selector: 'app-modifier-offre',
@@ -29,7 +30,7 @@ export class ModifierOffreComponent implements OnInit {
   constructor(private http: HttpClient) { }
 
   ngOnInit(): void {
-    this.http.get<any[]>("http://localhost:5000/api/Offre")
+    this.http.get<any[]>(`${environment.apiUrl}/Offre`)
       .subscribe({
         next: data => {
           this.offres = data;
@@ -43,7 +44,7 @@ export class ModifierOffreComponent implements OnInit {
   chargerOffre() {
     if (!this.selectedOffreId) return;
 
-    this.http.get(`http://localhost:5000/api/Offre/${this.selectedOffreId}`)
+    this.http.get(`${environment.apiUrl}/Offre/${this.selectedOffreId}`)
       .subscribe({
         next: data => {
           this.offre = data;
@@ -63,7 +64,7 @@ export class ModifierOffreComponent implements OnInit {
       return;
     }
 
-    this.http.put(`http://localhost:5000/api/Offre/${this.offre.idOffre}`, this.offre)
+    this.http.put(`${environment.apiUrl}/Offre/${this.offre.idOffre}`, this.offre)
       .subscribe({
         next: () => {
           this.message = "Offre mise à jour avec succès !";

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-mes-billets',
@@ -31,7 +32,7 @@ export class MesBillets implements OnInit {
 
   chargerBillets(idUtilisateur: number): void {
     this.loading = true;
-    this.http.get<any[]>(`https://localhost:5001/api/Billet/utilisateur/${idUtilisateur}`).subscribe({
+    this.http.get<any[]>(`${environment.apiUrl}/Billet/utilisateur/${idUtilisateur}`).subscribe({
       next: (res) => {
         this.billets = res.sort(
           (a, b) => new Date(b.dateEmission).getTime() - new Date(a.dateEmission).getTime()

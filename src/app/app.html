@@ -17,7 +17,7 @@
           </a>
         </li>
         
-        <ng-container *ngIf="!isEmploye">
+        <ng-container *ngIf="!isEmploye && !user">
           <li class="nav-item">
             <a class="nav-link" routerLink="/offres" routerLinkActive="active">Offres</a>
           </li>
@@ -64,9 +64,9 @@
           <li class="nav-item">
             <a class="nav-link" routerLink="/employe/scanner" routerLinkActive="active">Scanner Billets</a>
           </li>
-          <li class="nav-item">
+          <!-- <li class="nav-item">
             <a class="nav-link" routerLink="/employe/liste-billets" routerLinkActive="active">Billets Scannés</a>
-          </li>
+          </li> -->
         </ng-container>
 
         <!-- Utilisateur connecté -->

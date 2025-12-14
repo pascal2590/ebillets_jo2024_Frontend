@@ -1,9 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { PanierService } from '../../services/panier.service'; // 🧩 à ajuster selon ton chemin réel
+import { PanierService } from '../../services/panier.service';
 import { HttpClientModule } from '@angular/common/http';
 import { Router } from '@angular/router';
-
 
 @Component({
   selector: 'app-panier',
@@ -14,29 +13,29 @@ import { Router } from '@angular/router';
 })
 export class PanierComponent implements OnInit {
   panier: any[] = [];
+  loading = false;
 
   constructor(
     private panierService: PanierService,
     private router: Router
   ) { }
+
   ngOnInit(): void {
     this.chargerPanier();
   }
 
-  /** 🔹 Recharge les données du panier depuis l'API' */
+  /** 🔹 Recharge le panier depuis l’API */
   chargerPanier(): void {
     const user = JSON.parse(localStorage.getItem('user') || '{}');
-
-    if (!user || !user.idUtilisateur) {
+    if (!user?.idUtilisateur) {
       this.panier = [];
       return;
     }
 
+    this.loading = true;
     this.panierService.getPanierFromApi(user.idUtilisateur).subscribe({
       next: (res) => {
         console.log('📦 Panier chargé depuis l’API:', res);
-
-        // Le backend renvoie un objet Panier avec une liste PaniersOffres
         this.panier = res.paniersOffres?.map((po: any) => ({
           idOffre: po.offre.idOffre,
           nomOffre: po.offre.nomOffre,
@@ -45,54 +44,60 @@ export class PanierComponent implements OnInit {
         })) || [];
       },
       error: (err) => {
-        console.error('❌ Erreur lors du chargement du panier:', err);
+        console.error('❌ Erreur chargement panier:', err);
         this.panier = [];
-      }
+      },
+      complete: () => this.loading = false
     });
   }
 
-
-  /** 🔹 Supprime une offre du panier coté serveur et côt*/
+  /** 🔹 Supprime une offre du panier côté serveur et localement */
   supprimer(idOffre: number): void {
     const user = JSON.parse(localStorage.getItem('user') || '{}');
-    if (!user || !user.idUtilisateur) {
+    if (!user?.idUtilisateur) {
       alert('⚠️ Vous devez être connecté pour supprimer une offre du panier.');
       return;
     }
 
     this.panierService.supprimerServeur(user.idUtilisateur, idOffre).subscribe({
-      next: (res) => {
-        console.log('✅ Supprimé du serveur :', res);
-        this.panierService.supprimer(idOffre); // Supprime aussi localement
+      next: () => {
+        this.panierService.supprimer(idOffre);
         this.chargerPanier();
       },
       error: (err) => {
-        console.error('❌ Erreur suppression panier :', err);
+        console.error('❌ Erreur suppression panier:', err);
         alert('Une erreur est survenue lors de la suppression.');
       }
     });
   }
 
-
   /** 🔹 Vide complètement le panier */
   vider(): void {
-    if (confirm('Voulez-vous vraiment vider votre panier ?')) {
-      // 🔹 Suppression du panier dans le localStorage
-      localStorage.removeItem('panier');
-
-      // 🔹 Réinitialisation du tableau local
-      this.panier = [];
-
-      alert('🗑️ Panier vidé avec succès.');
+    const user = JSON.parse(localStorage.getItem('user') || '{}');
+    if (!user?.idUtilisateur) {
+      alert('⚠️ Vous devez être connecté pour vider le panier.');
+      return;
     }
+
+    if (!confirm('Voulez-vous vraiment vider votre panier ?')) return;
+
+    this.panierService.viderServeur(user.idUtilisateur).subscribe({
+      next: () => {
+        this.panierService.vider();
+        this.panier = [];
+        alert('🗑️ Panier vidé avec succès.');
+      },
+      error: (err) => {
+        console.error('❌ Erreur vidage panier:', err);
+        alert('Une erreur est survenue lors du vidage du panier.');
+      }
+    });
   }
 
-
-  /** 🔹 Envoie le panier à l’API ASP.NET Core pour créer les réservations */
+  /** 🔹 Crée les réservations et vide le panier */
   ouvrirReservation(): void {
     const user = JSON.parse(localStorage.getItem('user') || '{}');
-
-    if (!user || !user.idUtilisateur) {
+    if (!user?.idUtilisateur) {
       alert('⚠️ Vous devez être connecté pour finaliser la réservation.');
       return;
     }
@@ -101,26 +106,22 @@ export class PanierComponent implements OnInit {
       next: async (res: any) => {
         console.log('✅ Réponse API:', res);
 
-        // Supprimer chaque offre commandée côté serveur
+        // Supprimer chaque offre côté serveur
         for (let item of this.panier) {
           await this.panierService.supprimerOffre(user.idUtilisateur, item.idOffre).toPromise();
         }
 
-        // Supprimer localement
+        // Supprime localement
         this.panierService.vider();
         this.panier = [];
 
         alert('🎉 Votre commande a été enregistrée avec succès !');
-
-        // Redirection
         this.router.navigate(['/reservation']);
       },
       error: (err) => {
-        console.error('❌ Erreur API:', err);
+        console.error('❌ Erreur création réservation:', err);
         alert('Une erreur est survenue lors de la réservation.');
       }
     });
   }
 }
-
-

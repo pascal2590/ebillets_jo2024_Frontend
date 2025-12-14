@@ -1,14 +1,15 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { environment } from '../../environments/environment';
 
 @Injectable({
     providedIn: 'root'
 })
 export class PanierService {
     private panierKey = 'panier';
-    private apiPanierUrl = 'http://192.168.1.196:5000/api/Panier'; // ✅ nouvelle URL
-    private apiReservationUrl = 'http://192.168.1.196:5000/api/Reservation';
+    private apiPanierUrl = `${environment.apiUrl}/Panier`; // ✅ nouvelle URL
+    private apiReservationUrl = `${environment.apiUrl}/Reservation`;
 
     constructor(private http: HttpClient) { }
 
@@ -26,10 +27,7 @@ export class PanierService {
     ajouterAuPanier(idUtilisateur: number, idOffre: number, quantite: number = 1): Observable<any> {
         const body = { idUtilisateur, idOffre, quantite };
         return this.http.post(`${this.apiPanierUrl}/ajouter`, body);
-    }
-
-
-    
+    }    
 
     /** ✅ LocalStorage (affichage rapide côté front) */
     ajouterLocal(offre: any): void {
@@ -55,7 +53,6 @@ export class PanierService {
         return this.http.delete(`${this.apiPanierUrl}/supprimer/${idUtilisateur}/${idOffre}`);
     }
 
-
     vider(): void {
         localStorage.removeItem(this.panierKey);
     }
@@ -73,5 +70,9 @@ export class PanierService {
 
         const body = { idUtilisateur, panier };
         return this.http.post(`${this.apiReservationUrl}/commander`, body);
+    }
+
+    viderServeur(idUtilisateur: number): Observable<any> {
+        return this.http.delete(`${this.apiPanierUrl}/utilisateur/${idUtilisateur}/vider`);
     }
 }

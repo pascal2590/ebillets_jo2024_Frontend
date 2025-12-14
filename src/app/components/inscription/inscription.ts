@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { Router, ActivatedRoute } from '@angular/router';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-inscription',
@@ -49,18 +50,13 @@ export class Inscription {
 
     this.loading = true;
 
-    const LOCAL_IP = '192.168.1.196';
-    const serverUrl = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
-      ? 'http://localhost:5000'
-      : `http://${LOCAL_IP}:5000`;
-
-    // POST vers le backend en incluant le rôle
-    this.http.post<any>(`${serverUrl}/api/Auth/register`, {
+    // 🔹 Utilisation de l'URL relative /api via environment
+    this.http.post<any>(`${environment.apiUrl}/Auth/register`, {
       nom: this.nom,
       prenom: this.prenom,
       email: this.email,
       password: this.password,
-      role: this.role // Important : 'Client' ou 'Employe'
+      role: this.role // 'Client' ou 'Employe'
     }).subscribe({
       next: res => {
         this.message = res.message || "Compte créé ✅";
@@ -69,10 +65,8 @@ export class Inscription {
         // Redirection après création
         setTimeout(() => {
           if (this.role === 'Employe') {
-            // Retour vers l'administration
             this.router.navigate(['/admin/offres']);
           } else {
-            // Client normal : vers la page de connexion
             this.router.navigate(['/connexion']);
           }
         }, 1000);
