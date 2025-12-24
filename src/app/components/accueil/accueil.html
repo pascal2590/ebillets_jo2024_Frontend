@@ -2,17 +2,9 @@
     <div class="overlay"></div>
     <div class="content">
         
-        <h1 class="tricolore display-4 fw-bold">BIENVENUE</h1>
-        <h1 class="tricolore display-4 fw-bold">sur le</h1>
-        <h1 class="tricolore display-4 fw-bold">SITE DE RÉSERVATION DES BILLETS</h1>
-        <h1 class="tricolore display-4 fw-bold">pour les</h1>
-        <h1 class="tricolore display-4 fw-bold">Jeux Olympiques de Paris 2024</h1>
-
+        <h1 class="tricolore display-4 fw-bold">BILLETTERIE</h1>        
+        <h1 class="tricolore display-4 fw-bold">Jeux Olympiques de Paris 2024</h1>        
         
-        <p class="lead mt-3">
-            <!-- Vivez la passion du sport, l’excellence et la fraternité au cœur de Paris. -->
-        </p>
-        <!-- <a routerLink="/offres" class="btn btn-primary btn-lg mt-4">Voir les Offres</a> -->
     </div>
 </div>
 
@@ -20,8 +12,8 @@
     <h2 class="text-center mb-4">Quelques épreuves phares</h2>
     <div class="row">
         <div class="col-md-4 mb-4" *ngFor="let epreuve of epreuves">
-            <div class="card h-100 shadow-sm">
-                <img [src]="epreuve.image" [alt]="'Épreuve de ' + epreuve.nom" class="card-img-top" />
+            <div class="card h-100 shadow-sm">                
+                <img [src]="epreuve.image" alt="Épreuve de sport" title="Épreuve de sport" class="card-img-top" />
                 <div class="card-body text-center">
                     <h5 class="card-title">{{ epreuve.nom }}</h5>
                     <p class="card-text text-muted">

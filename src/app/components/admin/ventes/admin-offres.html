@@ -1,23 +1,26 @@
 <div class="container mt-5">
     <h2 class="text-center mb-4">📊 Statistiques des ventes par offre</h2>
 
+    <!-- Chargement -->
     <div *ngIf="loading" class="text-center">
         <div class="spinner-border text-primary" role="status">
             <span class="visually-hidden">Chargement...</span>
         </div>
     </div>
 
+    <!-- Erreur -->
     <div *ngIf="error" class="alert alert-danger text-center">
         {{ error }}
     </div>
 
+    <!-- Contenu principal -->
     <div *ngIf="!loading && ventes.length > 0">
-        <!-- ✅ Graphique -->
+        <!-- Graphique -->
         <div class="card shadow-sm mb-5 p-4">
             <canvas #chartCanvas></canvas>
         </div>
 
-        <!-- ✅ Tableau -->
+        <!-- Tableau -->
         <table class="table table-striped table-hover shadow-sm">
             <thead class="table-primary">
                 <tr>
@@ -35,9 +38,22 @@
                     <td class="text-end fw-bold">{{ v.montantTotal | number:'1.2-2' }}</td>
                 </tr>
             </tbody>
+
+            <!-- Ligne de totaux -->
+            <tfoot class="table-secondary fw-bold">
+                <tr>
+                    <td>Total</td>
+                    <td class="text-center">—</td>
+                    <td class="text-center">{{ totalNbVentes }}</td>
+                    <td class="text-end">
+                        {{ totalMontant | number:'1.2-2' }}
+                    </td>
+                </tr>
+            </tfoot>
         </table>
     </div>
 
+    <!-- Aucune vente -->
     <div *ngIf="!loading && ventes.length === 0" class="alert alert-info text-center">
         Aucune vente enregistrée pour le moment.
     </div>

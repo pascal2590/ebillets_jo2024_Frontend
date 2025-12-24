@@ -2,8 +2,16 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { PanierService } from '../../services/panier.service';
+import { PanierService, PanierOffre } from '../../services/panier.service';
 import { environment } from '../../../environments/environment';
+
+export interface Offre {
+  idOffre: number;
+  nomOffre: string;
+  description?: string;
+  prix: number;
+  nbPersonnes: number;
+}
 
 @Component({
   selector: 'app-offres',
@@ -13,10 +21,10 @@ import { environment } from '../../../environments/environment';
   styleUrls: ['./offres.css']
 })
 export class Offres implements OnInit {
-  offres: any[] = [];
+  offres: Offre[] = [];
   loading = false;
   error: string | null = null;
-  isAdmin = false; // ✅ ajout
+  isAdmin = false;
 
   constructor(
     private http: HttpClient,
@@ -25,17 +33,15 @@ export class Offres implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    // ✅ Détection du rôle utilisateur
     const user = JSON.parse(localStorage.getItem('user') || '{}');
-    this.isAdmin = user && user.role === 2; // adapte selon ton backend (ADMIN / admin / Administrateur)
-
+    this.isAdmin = user && user.role === 2;
     this.chargerOffres();
   }
 
   chargerOffres(): void {
     this.loading = true;
-    this.http.get<any[]>(`${environment.apiUrl}/Offre`).subscribe({
-      next: (res) => {
+    this.http.get<Offre[]>(`${environment.apiUrl}/Offre`).subscribe({
+      next: (res: Offre[]) => {
         this.offres = res;
         this.loading = false;
       },
@@ -46,7 +52,7 @@ export class Offres implements OnInit {
     });
   }
 
-  ajouterAuPanier(offre: any): void {
+  ajouterAuPanier(offre: Offre): void {
     const user = JSON.parse(localStorage.getItem('user') || '{}');
 
     if (!user || !user.idUtilisateur) {
@@ -54,23 +60,27 @@ export class Offres implements OnInit {
       return;
     }
 
-    const panier = JSON.parse(localStorage.getItem('panier') || '[]');
-    const dejaDansPanier = panier.some((item: any) => item.idOffre === offre.idOffre);
+    const panierItem: PanierOffre = {
+      idOffre: offre.idOffre,
+      nomOffre: offre.nomOffre,
+      prix: offre.prix,
+      quantite: 1
+    };
 
-    if (dejaDansPanier) {
-      alert(`ℹ️ "${offre.nomOffre}" est déjà dans votre panier.`);
-      return;
-    }
-
-    this.panierService.ajouterAuPanier(user.idUtilisateur, offre.idOffre).subscribe({
-      next: () => {
-        this.panierService.ajouterLocal(offre);
-        alert(`✅ "${offre.nomOffre}" a été ajoutée au panier !`);
-      },
-      error: (err) => {
-        console.error('❌ Erreur ajout panier:', err);
-        alert('Erreur lors de l’ajout au panier.');
-      }
-    });
+    this.panierService.ajouterAuPanier(user.idUtilisateur, offre.idOffre, 1)
+      .subscribe({
+        next: () => {
+          alert(`✅ "${offre.nomOffre}" a été ajoutée au panier !`);
+          this.panierService.ajouterLocal(panierItem);
+        },
+        error: (err: any) => {
+          if (err.status === 409) {
+            alert(`ℹ️ "${offre.nomOffre}" est déjà dans votre panier.`);
+          } else {
+            console.error('❌ Erreur ajout panier:', err);
+            alert('Erreur lors de l’ajout au panier.');
+          }
+        }
+      });
   }
 }

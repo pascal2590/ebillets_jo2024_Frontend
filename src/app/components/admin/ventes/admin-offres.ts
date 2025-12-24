@@ -47,6 +47,14 @@ export class AdminOffresComponent implements AfterViewInit {
       });
   }
 
+  get totalNbVentes(): number {
+    return this.ventes.reduce((total, v) => total + (v.nbVentes || 0), 0);
+  }
+
+  get totalMontant(): number {
+    return this.ventes.reduce((total, v) => total + (v.montantTotal || 0), 0);
+  }
+
   creerGraphique() {
     if (!this.chartCanvas?.nativeElement || this.ventes.length === 0) return;
 

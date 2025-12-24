@@ -1,8 +1,7 @@
 export const environment = {
     production: true,
-    // Utiliser une URL relative pour que le protocole HTTPS du site soit automatiquement utilisé
-    apiUrl: '/api',
-    // IP du serveur peut être conservée si nécessaire pour d'autres usages
-    ipServeur: '192.168.1.92',
+    // Possibilité d'utiliser une URL relative pour que le protocole HTTPS du site soit automatiquement utilisé
+    apiUrl: '/api',  // Utilise une URL relative (pas d'IP ou de port fixe)
+    // ipServeur: '192.168.1.92', // Pas utilisé pour les appels API en prod
     apiKey: 'clé-prod'
 };
