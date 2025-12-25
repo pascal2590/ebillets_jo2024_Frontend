@@ -20,8 +20,9 @@
     AddOutputFilterByType DEFLATE image/svg+xml
 </IfModule>
 
-<IfModule mod_expires.c>
+<IfModule mod_expires.c>    
     ExpiresActive On
+    ExpiresDefault "access plus 7 days"
 
     # Mise en cache longue pour JS, CSS, images, polices
     ExpiresByType text/css "access plus 1 year"
@@ -34,6 +35,10 @@
     ExpiresByType font/woff2 "access plus 1 year"
     ExpiresByType font/woff "access plus 1 year"
     ExpiresByType font/ttf "access plus 1 year"
+    ExpiresByType image/x-icon "access plus 1 year"
+    ExpiresByType image/webp "access plus 1 year"
+    ExpiresByType application/json "access plus 1 year"
+    ExpiresByType application/manifest+json "access plus 1 year"
 
     # Pas de cache pour index.html pour toujours récupérer la dernière version
     <FilesMatch "index.html">

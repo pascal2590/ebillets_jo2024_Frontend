@@ -1,48 +1,84 @@
-# See https://docs.github.com/get-started/getting-started-with-git/ignoring-files for more about ignoring files.
+# ===================================
+# C# / ASP.NET
+# ===================================
+bin/
+obj/
+publish/
+Debug/
+Release/
+x64/
+x86/
+*.nupkg
+packages/
+*.snupkg
+*.log
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+*.vs/
+*.tmp
+*.temp
+*.cache
+*.dbmdl
+*.pdb
+_ReSharper*/
+*.DotSettings.user
+TestResults/
+*.coverage
+*.coveragexml
+appsettings.Development.json
+# ===================================
+# Pour éviter tout résidu de publish accidentel
+# ===================================
+*.runtimeconfig.json
+*.deps.json
 
-# Compiled output
-/dist
-/tmp
-/out-tsc
-/bazel-out
 
-# Node
-/node_modules
-npm-debug.log
-yarn-error.log
+# ===================================
+# Angular / Node.js / Front-end
+# ===================================
+node_modules/
+dist/
+tmp/
+out-tsc/
+.angular/
+.angular-cache/
+.angular-cli.json
+package-lock.json
+yarn.lock
+npm-debug.log*
+yarn-error.log*
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
 
-# IDEs and editors
-.idea/
-.project
-.classpath
-.c9/
-*.launch
-.settings/
-*.sublime-workspace
-
-# Visual Studio Code
-.vscode/*
-!.vscode/settings.json
-!.vscode/tasks.json
-!.vscode/launch.json
-!.vscode/extensions.json
-.history/*
-
-# Miscellaneous
-/.angular/cache
-.sass-cache/
-/connect.lock
-/coverage
-/libpeerconnection.log
-testem.log
-/typings
-__screenshots__/
+# ===================================
+# Bootstrap / assets générés
+# ===================================
+wwwroot/lib/
+wwwroot/dist/
 
 # ===================================
 # Dossier personnel à ignorer
 # ===================================
 Aide/
 
-# System files
-.DS_Store
+# ===================================
+# Autres fichiers communs
+# ===================================
+*.bak
+*.swp
+*.DS_Store
 Thumbs.db
+.vscode/
+# Sécurité publish / dotnet
+*.deps.json
+*.runtimeconfig.json
+
+# Logs serveur
+*.journal
+nohup.out
+
